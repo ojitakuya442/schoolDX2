@@ -3180,48 +3180,68 @@
           <p class="page-subtitle">システム全体の環境設定・管理</p>
         </div>
 
-        <div class="card">
-          <h3 class="card-title">閲覧用パスワード設定</h3>
-          <p style="font-size: 14px; color: #1A1A1A; margin-bottom: 20px;">
-            入試情報など、セキュリティ保護された画面へアクセスするためのパスワードです。
-          </p>
-          <div class="form-group">
-            <label class="form-label">現在のパスワード</label>
-            <input type="password" class="form-input" style="max-width: 300px;">
+        <!-- 閲覧用パスワード設定 -->
+        <div style="border: 1px solid #e5e5e5; border-radius: 10px; overflow: hidden; margin-bottom: 16px; background: #fff;">
+          <div style="display: flex; align-items: center; padding: 16px 20px; border-bottom: 1px solid #f0f0f0;">
+            <div style="width: 36px; height: 36px; border-radius: 8px; background: #EFF6FF; color: #1E3A8A; display: flex; align-items: center; justify-content: center; margin-right: 14px; flex-shrink: 0;">
+              <span class="material-icons" style="font-size: 18px;">lock</span>
+            </div>
+            <div>
+              <div style="font-size: 15px; font-weight: 600; color: #1E3A8A;">閲覧用パスワード設定</div>
+              <div style="font-size: 12px; color: #9CA3AF; margin-top: 1px;">入試情報など、セキュリティ保護された画面へアクセスするためのパスワード</div>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">新しいパスワード</label>
-            <input type="password" class="form-input" style="max-width: 300px;">
-          </div>
-          <div class="form-group">
-            <label class="form-label">新しいパスワード（確認）</label>
-            <input type="password" class="form-input" style="max-width: 300px;">
-          </div>
-          <div style="display: flex; justify-content: flex-end;">
-            <button class="btn-primary" style="width: auto;">保存</button>
+          <div style="padding: 20px 20px 20px 70px;">
+            <div style="max-width: 300px;">
+              <div style="margin-bottom: 14px;">
+                <label class="form-label">現在のパスワード</label>
+                <input type="password" class="form-input" style="margin-bottom: 0;">
+              </div>
+              <div style="margin-bottom: 14px;">
+                <label class="form-label">新しいパスワード</label>
+                <input type="password" class="form-input" style="margin-bottom: 0;">
+              </div>
+              <div style="margin-bottom: 16px;">
+                <label class="form-label">新しいパスワード（確認）</label>
+                <input type="password" class="form-input" style="margin-bottom: 0;">
+              </div>
+              <div style="display: flex; justify-content: flex-end;">
+                <button class="btn-primary" style="width: auto;">保存</button>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="card">
-          <h3 class="card-title">年度設定（進級・卒業処理）</h3>
-          <p style="font-size: 14px; color: #1A1A1A; margin-bottom: 20px;">
-            新年度への切り替え作業を行います。全在校生の学年を1つ上げ、自動的にクラス編成のベースを作成します。
-          </p>
-          <div
-            style="background-color: #FEF2F2; border: 1px solid #FCA5A5; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
-            <div
-              style="color: #DC2626; font-weight: bold; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
-              <span>⚠️</span>
-              この操作は取り消せません
+        <!-- 年度設定 -->
+        <div style="border: 1px solid #e5e5e5; border-radius: 10px; overflow: hidden; background: #fff;">
+          <div style="display: flex; align-items: center; padding: 16px 20px; border-bottom: 1px solid #f0f0f0;">
+            <div style="width: 36px; height: 36px; border-radius: 8px; background: #EFF6FF; color: #1E3A8A; display: flex; align-items: center; justify-content: center; margin-right: 14px; flex-shrink: 0;">
+              <span class="material-icons" style="font-size: 18px;">calendar_today</span>
             </div>
-            <p style="font-size: 13px; color: #991B1B; margin: 0; line-height: 1.5;">
-              「年度を翌年度に進める」を実行すると、現在の6年生は自動的に卒業生へ移行し、その他の学年は1つ上がります。<br>
-              必ず全児童の今年度の成績や情報が入力完了しているかご確認ください。
-            </p>
+            <div>
+              <div style="font-size: 15px; font-weight: 600; color: #1E3A8A;">年度設定（進級・卒業処理）</div>
+              <div style="font-size: 12px; color: #9CA3AF; margin-top: 1px;">新年度への切り替え・進級・卒業処理</div>
+            </div>
           </div>
-
-          <button class="btn-primary" style="background-color: #DC2626; border-color: #DC2626; width: auto;"
-            onclick="openModal('advanceYearModal')">年度を翌年度に進める</button>
+          <div style="padding: 20px 20px 20px 70px;">
+            <p style="font-size: 14px; color: #1A1A1A; margin-bottom: 16px;">
+              新年度への切り替え作業を行います。全在校生の学年を1つ上げ、自動的にクラス編成のベースを作成します。
+            </p>
+            <div style="background-color: #FEF2F2; border: 1px solid #FCA5A5; border-radius: 8px; padding: 14px 16px; margin-bottom: 20px;">
+              <div style="color: #DC2626; font-weight: 600; font-size: 13px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                <span class="material-icons" style="font-size: 16px;">warning</span>
+                この操作は取り消せません
+              </div>
+              <p style="font-size: 13px; color: #991B1B; margin: 0; line-height: 1.6;">
+                「年度を翌年度に進める」を実行すると、現在の6年生は自動的に卒業生へ移行し、その他の学年は1つ上がります。<br>
+                必ず全児童の今年度の成績や情報が入力完了しているかご確認ください。
+              </p>
+            </div>
+            <div style="display: flex; justify-content: flex-end;">
+              <button class="btn-primary" style="background-color: #DC2626; border-color: #DC2626; width: auto;"
+                onclick="openModal('advanceYearModal')">年度を翌年度に進める</button>
+            </div>
+          </div>
         </div>
       </div>
     </main>
