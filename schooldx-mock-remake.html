@@ -1,0 +1,4405 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SchoolDX - 名簿管理システム</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background-color: #fafafa;
+      color: #1A1A1A;
+      min-height: 100vh;
+    }
+
+    /* Login Screen */
+    .login-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: #f5f5f5;
+    }
+
+    .login-box {
+      background-color: #fff;
+      padding: 48px;
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      max-width: 400px;
+      border: 1px solid #e0e0e0;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+      color: #1E3A8A;
+    }
+
+    .logo-sub {
+      font-size: 13px;
+      color: #1A1A1A;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: #1A1A1A;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 14px;
+      border: 1px solid #d0d0d0;
+      border-radius: 4px;
+      margin-bottom: 16px;
+      outline: none;
+      transition: border-color 0.2s;
+      font-family: 'Noto Sans JP', sans-serif;
+      color: #1A1A1A;
+    }
+
+    .form-input:focus {
+      border-color: #1E3A8A;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      font-size: 14px;
+      font-weight: 600;
+      background-color: #1E3A8A;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      font-family: 'Noto Sans JP', sans-serif;
+    }
+
+    .btn-primary:hover {
+      background-color: #1e40af;
+    }
+
+    .btn-secondary {
+      padding: 10px 20px;
+      font-size: 13px;
+      font-weight: 500;
+      background-color: #fff;
+      color: #1A1A1A;
+      border: 1px solid #d0d0d0;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Noto Sans JP', sans-serif;
+    }
+
+    .btn-secondary:hover {
+      background-color: #f5f5f5;
+    }
+
+    .link-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .link {
+      color: #1A1A1A;
+      font-size: 13px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .link:hover {
+      text-decoration: underline;
+    }
+
+    /* Main Layout */
+    .app-container {
+      display: none;
+    }
+
+    .sidebar {
+      width: 240px;
+      background-color: #fff;
+      border-right: 1px solid #e5e5e5;
+      min-height: 100vh;
+      padding: 20px 0;
+      position: fixed;
+      left: 0;
+      top: 0;
+    }
+
+    .sidebar-logo {
+      padding: 0 24px;
+      margin-bottom: 32px;
+    }
+
+    .sidebar-logo-text {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #1E3A8A;
+    }
+
+    .sidebar-logo-sub {
+      font-size: 11px;
+      color: #1A1A1A;
+      margin-top: 2px;
+    }
+
+    .nav-section {
+      margin-bottom: 24px;
+    }
+
+    .nav-section-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: #1E3A8A;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 0 24px;
+      margin-bottom: 8px;
+      opacity: 0.7;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 24px;
+      font-size: 14px;
+      color: #1A1A1A;
+      cursor: pointer;
+      transition: all 0.15s;
+      border-left: 3px solid transparent;
+    }
+
+    .nav-item:hover {
+      background-color: #f5f5f5;
+    }
+
+    .nav-item.active {
+      background-color: #EFF6FF;
+      border-left-color: #1E3A8A;
+      color: #1E3A8A;
+      font-weight: 500;
+    }
+
+    .nav-icon {
+      margin-right: 12px;
+      font-size: 20px;
+      width: 20px;
+      opacity: 0.7;
+      font-family: 'Material Icons';
+      font-style: normal;
+      font-weight: normal;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      white-space: nowrap;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+      vertical-align: middle;
+    }
+
+    .nav-item.active .nav-icon {
+      opacity: 1;
+    }
+
+    .user-info {
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      right: 0;
+      padding: 16px 24px;
+      border-top: 1px solid #e5e5e5;
+    }
+
+    .user-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: #1E3A8A;
+    }
+
+    .user-role {
+      font-size: 12px;
+      color: #1A1A1A;
+    }
+
+    .logout-btn {
+      margin-top: 12px;
+      font-size: 13px;
+      color: #1A1A1A;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      font-family: 'Noto Sans JP', sans-serif;
+    }
+
+    .logout-btn:hover {
+      text-decoration: underline;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 240px;
+      padding: 32px 40px;
+    }
+
+    .page-header {
+      margin-bottom: 32px;
+    }
+
+    .page-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      letter-spacing: -0.3px;
+      color: #1E3A8A;
+    }
+
+    .page-subtitle {
+      font-size: 14px;
+      color: #1A1A1A;
+    }
+
+    .card {
+      background-color: #fff;
+      border-radius: 6px;
+      border: 1px solid #e5e5e5;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #1E3A8A;
+    }
+
+    /* Search Bar */
+    .search-bar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: flex-end;
+    }
+
+    .search-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .search-label {
+      font-size: 12px;
+      color: #1A1A1A;
+      margin-bottom: 4px;
+    }
+
+    .search-input {
+      padding: 8px 12px;
+      font-size: 13px;
+      border: 1px solid #d0d0d0;
+      border-radius: 4px;
+      width: 160px;
+      font-family: 'Noto Sans JP', sans-serif;
+      color: #1A1A1A;
+    }
+
+    .search-select {
+      padding: 8px 12px;
+      font-size: 13px;
+      border: 1px solid #d0d0d0;
+      border-radius: 4px;
+      background-color: #fff;
+      width: 120px;
+      font-family: 'Noto Sans JP', sans-serif;
+      color: #1A1A1A;
+    }
+
+    /* Table */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .data-table th {
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 2px solid #e5e5e5;
+      font-weight: 600;
+      font-size: 12px;
+      color: #1A1A1A;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .data-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #f0f0f0;
+      color: #1A1A1A;
+    }
+
+    .action-btn {
+      padding: 6px 12px;
+      font-size: 12px;
+      background-color: transparent;
+      border: 1px solid #d0d0d0;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 8px;
+      transition: all 0.15s;
+      font-family: 'Noto Sans JP', sans-serif;
+      color: #1A1A1A;
+    }
+
+    .action-btn:hover {
+      background-color: #f5f5f5;
+    }
+
+    .action-btn.delete {
+      color: #c00;
+      border-color: #fcc;
+    }
+
+    /* Badge */
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      font-size: 12px;
+      border-radius: 100px;
+      font-weight: 500;
+    }
+
+    .badge-active {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .badge-inactive {
+      background-color: #fff3e0;
+      color: #e65100;
+    }
+
+    .badge-admin {
+      background-color: #1E3A8A;
+      color: #fff;
+    }
+
+    /* Toolbar */
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .toolbar-right {
+      display: flex;
+      gap: 12px;
+    }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 24px;
+    }
+
+    .page-btn {
+      padding: 8px 14px;
+      border: 1px solid #e0e0e0;
+      background-color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: 'Noto Sans JP', sans-serif;
+      color: #1A1A1A;
+    }
+
+    .page-btn:hover {
+      background-color: #f5f5f5;
+    }
+
+    .page-btn.active {
+      background-color: #1E3A8A;
+      color: #fff;
+      border-color: #1E3A8A;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #e5e5e5;
+      margin-bottom: 24px;
+    }
+
+    .tab {
+      padding: 12px 20px;
+      font-size: 14px;
+      color: #1A1A1A;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: all 0.15s;
+    }
+
+    .tab:hover {
+      color: #1E3A8A;
+    }
+
+    .tab.active {
+      color: #1E3A8A;
+      font-weight: 500;
+      border-bottom-color: #1E3A8A;
+    }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 32px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 80vh;
+      overflow: auto;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      color: #1E3A8A;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-row-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .form-row-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .form-row-5 {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1E3A8A;
+      margin-top: 24px;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 32px;
+      padding-top: 20px;
+      border-top: 1px solid #e5e5e5;
+    }
+
+    /* Steps Indicator */
+    .steps-indicator {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .steps-indicator .step {
+      font-size: 14px;
+      color: #999;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .steps-indicator .step.active {
+      color: #1E3A8A;
+      font-weight: bold;
+    }
+
+    /* Format Cards */
+    .format-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .format-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      background-color: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .format-card:hover {
+      border-color: #1E3A8A;
+      background-color: #EFF6FF;
+    }
+
+    .format-card .icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+      font-family: 'Material Icons';
+      font-style: normal;
+      font-weight: normal;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      white-space: nowrap;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+      color: #1E3A8A;
+    }
+
+    .format-card .name {
+      font-size: 14px;
+      font-weight: 500;
+      color: #1A1A1A;
+    }
+
+    /* Checkbox List */
+    .checkbox-list {
+      margin-top: 20px;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      border-bottom: 1px solid #f0f0f0;
+      cursor: pointer;
+    }
+
+    /* Sticky columns CSS */
+    .data-table {
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+
+    .data-table th {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background-color: #f7f9fa;
+    }
+
+    /* Column 1 (e.g. 学籍番号, 受験番号) */
+    .data-table .col-fixed-1,
+    .data-table .cell-fixed-1 {
+      position: sticky;
+      left: 0;
+      z-index: 11;
+      background-color: #fff;
+      min-width: 100px;
+      max-width: 100px;
+    }
+
+    .data-table th.col-fixed-1 {
+      background-color: #f7f9fa;
+      z-index: 12;
+    }
+
+    /* Column 2 (e.g. 学年, 卒業年度) */
+    .data-table .col-fixed-2,
+    .data-table .cell-fixed-2 {
+      position: sticky;
+      left: 100px;
+      z-index: 11;
+      background-color: #fff;
+      min-width: 80px;
+      max-width: 80px;
+    }
+
+    .data-table th.col-fixed-2 {
+      background-color: #f7f9fa;
+      z-index: 12;
+    }
+
+    /* Column 3 (e.g. 氏名) */
+    .data-table .col-fixed-3,
+    .data-table .cell-fixed-3 {
+      position: sticky;
+      left: 180px;
+      z-index: 11;
+      background-color: #fff;
+      min-width: 160px;
+      max-width: 160px;
+      box-shadow: 2px 0 5px -2px rgba(0, 0, 0, 0.1);
+    }
+
+    .data-table.graduates-table .col-fixed-3,
+    .data-table.graduates-table .cell-fixed-3 {
+      left: 180px;
+    }
+
+    /* Alternative Column 1 (wider, e.g. Event Attendees/Examinees Name only) */
+    .data-table .col-fixed-name-only,
+    .data-table .cell-fixed-name-only {
+      position: sticky;
+      left: 0;
+      z-index: 11;
+      background-color: #fff;
+      min-width: 160px;
+      max-width: 160px;
+      border-right: 1px solid #e0e0e0;
+    }
+    .data-table th.col-fixed-name-only {
+      background-color: #f7f9fa;
+      z-index: 12;
+    }
+
+    /* Column 2 for Attendees/Examinees (e.g. 学年, 幼稚園) */
+    .data-table .col-fixed-attr,
+    .data-table .cell-fixed-attr {
+      position: sticky;
+      left: 160px;
+      z-index: 11;
+      background-color: #fff;
+      min-width: 100px;
+      max-width: 100px;
+      border-right: 1px solid #e0e0e0;
+    }
+    .data-table th.col-fixed-attr {
+      background-color: #f7f9fa;
+      z-index: 12;
+    }
+
+    /* Column 3 for Attendees/Examinees (e.g. 塾) */
+    .data-table .col-fixed-school,
+    .data-table .cell-fixed-school {
+      position: sticky;
+      left: 260px;
+      z-index: 11;
+      background-color: #fff;
+      min-width: 120px;
+      max-width: 120px;
+      box-shadow: 2px 0 5px -2px rgba(0, 0, 0, 0.1);
+    }
+    .data-table th.col-fixed-school {
+      background-color: #f7f9fa;
+      z-index: 12;
+    }
+
+    /* Keep old classes mapping to new for backwards compatibility where unaffected */
+    .data-table .col-id, .data-table .cell-id { left: 0; position: sticky; z-index: 11; background-color: #fff; min-width: 100px; max-width: 100px; }
+    .data-table th.col-id { background-color: #f7f9fa; z-index: 12; }
+    .data-table .col-grad-year, .data-table .cell-grad-year { left: 100px; position: sticky; z-index: 11; background-color: #fff; min-width: 80px; max-width: 80px; }
+    .data-table th.col-grad-year { background-color: #f7f9fa; z-index: 12; }
+    .data-table .col-name, .data-table .cell-name { left: 180px; position: sticky; z-index: 11; background-color: #fff; min-width: 160px; max-width: 160px; box-shadow: 2px 0 5px -2px rgba(0, 0, 0, 0.1); }
+    .data-table th.col-name { background-color: #f7f9fa; z-index: 12; }
+
+    .data-table .col-actions,
+    .data-table .cell-actions {
+      position: sticky;
+      right: 0;
+      z-index: 11;
+      background-color: #fff;
+      min-width: 200px;
+      max-width: 200px;
+      box-shadow: -2px 0 5px -2px rgba(0, 0, 0, 0.1);
+      text-align: right;
+    }
+
+    .data-table th.col-actions {
+      background-color: #f7f9fa;
+      z-index: 12;
+      text-align: center;
+    }
+
+    .checkbox-item:hover {
+      background-color: #f9f9f9;
+    }
+
+    .checkbox-item.header {
+      background-color: #f9f9f9;
+      margin-bottom: 8px;
+      border-bottom: none;
+    }
+
+    .checkbox-item input {
+      margin-right: 12px;
+    }
+
+    /* Export Buttons */
+    .export-buttons {
+      margin-top: 24px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .btn-export {
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: 'Noto Sans JP', sans-serif;
+      transition: all 0.15s;
+    }
+
+    .btn-export-csv {
+      background-color: #fff;
+      color: #1E3A8A;
+      border: 1px solid #1E3A8A;
+    }
+
+    .btn-export-csv:hover {
+      background-color: #EFF6FF;
+    }
+
+    .btn-export-pdf {
+      background-color: #1E3A8A;
+      color: #fff;
+      border: 1px solid #1E3A8A;
+    }
+
+    .btn-export-pdf:hover {
+      background-color: #1e40af;
+    }
+
+    /* Auth Screen */
+    .auth-screen {
+      max-width: 400px;
+      margin: 40px auto;
+      text-align: center;
+    }
+
+    .auth-screen .icon {
+      font-size: 48px;
+      margin-bottom: 24px;
+      font-family: 'Material Icons';
+      font-style: normal;
+      font-weight: normal;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      white-space: nowrap;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+      color: #1E3A8A;
+      display: block;
+    }
+
+    .auth-screen h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .auth-screen p {
+      font-size: 14px;
+      color: #1A1A1A;
+      margin-bottom: 32px;
+    }
+
+    /* Confirm Preview */
+    .confirm-preview {
+      background-color: #f9f9f9;
+      padding: 20px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+
+    .confirm-item {
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .confirm-item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .confirm-label {
+      font-size: 12px;
+      color: #1A1A1A;
+      font-weight: 500;
+    }
+
+    .confirm-value {
+      margin-top: 4px;
+      font-size: 14px;
+    }
+
+    .confirm-body {
+      margin-top: 8px;
+      padding: 12px;
+      background-color: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* Header with back button */
+    .header-with-back {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .header-with-back .btn-secondary {
+      margin-right: 16px;
+      padding: 8px 16px;
+    }
+
+    .header-with-back .card-title {
+      margin-bottom: 0;
+    }
+
+    .header-with-back .sub-info {
+      font-size: 13px;
+      font-weight: normal;
+      color: #1A1A1A;
+      margin-left: 12px;
+    }
+
+    /* Send time */
+    .send-time-options {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .send-time-options label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      color: #1A1A1A;
+    }
+
+    .send-time-options input[type="radio"] {
+      margin-right: 8px;
+    }
+
+    .send-time-options input[type="datetime-local"] {
+      width: 220px;
+    }
+
+    /* Checkbox grid */
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px 8px;
+    }
+
+    .checkbox-grid label {
+      display: flex;
+      align-items: center;
+      padding: 4px 8px;
+      cursor: pointer;
+      color: #1A1A1A;
+    }
+
+    .checkbox-grid input {
+      margin-right: 8px;
+    }
+
+    /* Page container */
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    /* Hidden */
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Login Screen -->
+  <div id="loginScreen" class="login-container">
+    <div class="login-box">
+      <div class="logo">SchoolDX</div>
+      <div class="logo-sub">小学校 名簿管理システム</div>
+      <label class="form-label">メールアドレス</label>
+      <input type="email" class="form-input" placeholder="example@school.ed.jp">
+      <label class="form-label">パスワード</label>
+      <input type="password" class="form-input" placeholder="••••••••">
+      <button class="btn-primary" onclick="login()">ログイン</button>
+      <div class="link-container">
+        <a class="link" onclick="showForgotPassword()">パスワードを忘れた方</a>
+        <a class="link" onclick="showForgotEmail()">メールアドレスを忘れた方</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Forgot Password Screen -->
+  <div id="forgotPasswordScreen" class="login-container hidden">
+    <div class="login-box">
+      <div class="logo">SchoolDX</div>
+      <div class="logo-sub">パスワード再設定</div>
+      <label class="form-label">登録メールアドレス</label>
+      <input type="email" class="form-input" placeholder="example@school.ed.jp">
+      <button class="btn-primary">再設定メールを送信</button>
+      <div class="link-container">
+        <a class="link" onclick="showLogin()">← ログイン画面に戻る</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Forgot Email Screen -->
+  <div id="forgotEmailScreen" class="login-container hidden">
+    <div class="login-box">
+      <div class="logo">SchoolDX</div>
+      <div class="logo-sub">メールアドレス確認</div>
+      <label class="form-label">氏名</label>
+      <input type="text" class="form-input" placeholder="山田 太郎">
+      <label class="form-label">生年月日</label>
+      <input type="date" class="form-input">
+      <button class="btn-primary">問い合わせを送信</button>
+      <div class="link-container">
+        <a class="link" onclick="showLogin()">← ログイン画面に戻る</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main App -->
+  <div id="appContainer" class="app-container">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-text">SchoolDX</div>
+        <div class="sidebar-logo-sub">名簿管理システム</div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">名簿管理</div>
+        <div class="nav-item active" data-page="students" onclick="showPage('students')">
+          <span class="nav-icon">people</span>
+          在校生管理
+        </div>
+        <div class="nav-item" data-page="graduates" onclick="showPage('graduates')">
+          <span class="nav-icon">school</span>
+          卒業生管理
+        </div>
+        <div class="nav-item" data-page="openCampus" onclick="showPage('openCampus')">
+          <span class="nav-icon">event</span>
+          イベント参加者管理
+        </div>
+        <div class="nav-item" data-page="examinees" onclick="showPage('examineesAuth')">
+          <span class="nav-icon">assignment</span>
+          入試受験者管理
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">機能</div>
+        <div class="nav-item" data-page="export" onclick="showPage('export')">
+          <span class="nav-icon">download</span>
+          データ出力
+        </div>
+        <div class="nav-item" data-page="mail" onclick="showPage('mail')">
+          <span class="nav-icon">email</span>
+          メール配信
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">管理者</div>
+        <div class="nav-item" data-page="teachers" onclick="showPage('teachers')">
+          <span class="nav-icon">supervisor_account</span>
+          教員管理
+        </div>
+        <div class="nav-item" data-page="master" onclick="showPage('master')">
+          <span class="nav-icon">folder</span>
+          マスタ管理
+        </div>
+        <div class="nav-item" data-page="settings" onclick="showPage('settings')">
+          <span class="nav-icon">settings</span>
+          システム設定
+        </div>
+      </div>
+
+      <div class="user-info">
+        <div class="user-name">山本 一郎</div>
+        <div class="user-role">管理者</div>
+        <button class="logout-btn" onclick="logout()">ログアウト</button>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Students Page -->
+      <div id="page-students" class="page active">
+        <div class="page-header">
+          <h1 class="page-title">在校生管理</h1>
+          <p class="page-subtitle">児童情報の検索・閲覧・編集</p>
+        </div>
+
+        <div class="tabs" style="margin-bottom: 24px;">
+          <div class="tab active" data-list-tab="general" onclick="showStudentListTab('general')">一般情報</div>
+          <div class="tab" data-list-tab="health" onclick="showStudentListTab('health')">保健室データ</div>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">検索・絞り込み</h3>
+
+          <!-- General Filters -->
+          <div id="filter-general" class="search-bar">
+            <!-- Row 1 -->
+            <div class="search-group">
+              <span class="search-label">学年</span>
+              <select class="search-select">
+                <option value="">全て</option>
+                <option>1年</option>
+                <option>2年</option>
+                <option>3年</option>
+                <option>4年</option>
+                <option>5年</option>
+                <option>6年</option>
+              </select>
+            </div>
+            <div class="search-group">
+              <span class="search-label">氏名</span>
+              <input class="search-input" placeholder="氏名で検索">
+            </div>
+            <div class="search-group">
+              <span class="search-label">縦割り班番号</span>
+              <input class="search-input" style="width: 100px;" placeholder="班番号">
+            </div>
+            <div class="search-group">
+              <span class="search-label">住所</span>
+              <input class="search-input" placeholder="住所で検索">
+            </div>
+            <div class="search-group">
+              <span class="search-label">兄弟</span>
+              <select class="search-select">
+                <option value="">全て</option>
+                <option>1年</option>
+                <option>2年</option>
+                <option>3年</option>
+                <option>4年</option>
+                <option>5年</option>
+                <option>6年</option>
+              </select>
+            </div>
+            <div class="search-group">
+              <span class="search-label">保護者会役員</span>
+              <select class="search-select" style="width: 100px;">
+                <option value="">全て</option>
+                <option>あり</option>
+                <option>なし</option>
+              </select>
+            </div>
+
+            <!-- Row 2 -->
+            <div class="search-group">
+              <span class="search-label">前期クラブ</span>
+              <input class="search-input" placeholder="クラブ名">
+            </div>
+            <div class="search-group">
+              <span class="search-label">後期クラブ</span>
+              <input class="search-input" placeholder="クラブ名">
+            </div>
+            <div class="search-group">
+              <span class="search-label">前期委員会</span>
+              <input class="search-input" placeholder="委員会名">
+            </div>
+            <div class="search-group">
+              <span class="search-label">後期委員会</span>
+              <input class="search-input" placeholder="委員会名">
+            </div>
+            <div class="search-group">
+              <span class="search-label">並び替え</span>
+              <select class="search-select">
+                <option value="">登録順</option>
+                <option>学年・出席番号順</option>
+                <option>五十音順</option>
+              </select>
+            </div>
+            <div style="display: flex; align-items: flex-end;">
+              <button class="btn-secondary">検索</button>
+            </div>
+          </div>
+
+          <!-- Health Filters -->
+          <div id="filter-health" class="search-bar" style="display: none;">
+            <div class="search-group">
+              <span class="search-label">年度</span>
+              <select class="search-select" style="width: 120px;">
+                <option>2024年度</option>
+                <option>2023年度</option>
+                <option>2022年度</option>
+                <option>2021年度</option>
+                <option>2020年度</option>
+                <option>2019年度</option>
+              </select>
+            </div>
+            <div class="search-group">
+              <span class="search-label">学年</span>
+              <select class="search-select">
+                <option value="">全て</option>
+                <option>1年</option>
+                <option>2年</option>
+                <option>3年</option>
+                <option>4年</option>
+                <option>5年</option>
+                <option>6年</option>
+              </select>
+            </div>
+            <div class="search-group">
+              <span class="search-label">氏名</span>
+              <input class="search-input" placeholder="氏名で検索">
+            </div>
+            <div class="search-group">
+              <span class="search-label">並び替え</span>
+              <select class="search-select">
+                <option value="">登録順</option>
+                <option>学年・出席番号順</option>
+                <option>五十音順</option>
+              </select>
+            </div>
+            <div style="display: flex; align-items: flex-end;">
+              <button class="btn-secondary">検索</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="toolbar">
+            <div>
+              <span style="font-size: 14px; color: #1A1A1A;">全 8 件</span>
+            </div>
+            <div class="toolbar-right">
+              <button id="healthEditModeToggle" class="btn-secondary"
+                style="display: none; border-color: #1E3A8A; color: #1E3A8A;"
+                onclick="toggleHealthEditMode()">編集モードにする</button>
+              <button class="btn-secondary">CSVインポート</button>
+              <button class="btn-primary" style="width: auto; padding: 10px 20px;" onclick="openModal('studentModal')">+
+                新規登録</button>
+            </div>
+          </div>
+
+          <div style="overflow-x: auto; max-width: 100%; white-space: nowrap; padding-bottom: 12px;">
+            <table class="data-table">
+              <thead id="studentTableHead">
+                <!-- JavaScriptで描画されます -->
+              </thead>
+              <tbody id="studentTableBody">
+                <!-- JavaScriptで描画されます -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pagination">
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">次へ →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Student Detail Page -->
+      <div id="page-studentDetail" class="page">
+        <div class="header-with-back">
+          <button class="btn-secondary" onclick="showPage('students')">← 戻る</button>
+          <div class="page-header" style="margin-bottom: 0;">
+            <h1 class="page-title">在校生詳細</h1>
+            <p class="page-subtitle">児童の詳細情報の閲覧・編集</p>
+          </div>
+        </div>
+
+        <div class="tabs">
+          <div class="tab active" data-tab="student-tab-general" onclick="showStudentTab('student-tab-general')">一般情報
+          </div>
+          <div class="tab" data-tab="student-tab-health" onclick="showStudentTab('student-tab-health')">保健室データ</div>
+        </div>
+
+        <!-- General Info Tab -->
+        <div id="student-tab-general" class="tab-content active">
+          <div class="card">
+            <div class="toolbar">
+              <h3 class="card-title" style="margin-bottom: 0;">基本情報</h3>
+              <div class="toolbar-right">
+                <button class="btn-primary" style="width: auto; padding: 8px 16px;">保存</button>
+              </div>
+            </div>
+
+            <div class="form-row-4">
+              <div class="form-group">
+                <label class="form-label">クラス番号</label>
+                <input type="text" class="form-input" value="12">
+              </div>
+              <div class="form-group">
+                <label class="form-label">学籍番号</label>
+                <input type="text" class="form-input" value="2024001">
+              </div>
+              <div class="form-group">
+                <label class="form-label">縦割り班番号</label>
+                <input type="number" class="form-input" value="3">
+              </div>
+              <div class="form-group">
+                <label class="form-label">タブレット番号</label>
+                <input type="text" class="form-input" value="TB-0142">
+              </div>
+            </div>
+
+            <div class="form-row-4">
+              <div class="form-group">
+                <label class="form-label">氏名(漢字)（姓）</label>
+                <input type="text" class="form-input" value="田中">
+              </div>
+              <div class="form-group">
+                <label class="form-label">氏名(漢字)（名）</label>
+                <input type="text" class="form-input" value="太郎">
+              </div>
+              <div class="form-group">
+                <label class="form-label">氏名(カナ)（姓）</label>
+                <input type="text" class="form-input" value="タナカ">
+              </div>
+              <div class="form-group">
+                <label class="form-label">氏名(カナ)（名）</label>
+                <input type="text" class="form-input" value="タロウ">
+              </div>
+            </div>
+
+            <div class="form-row-4">
+              <div class="form-group">
+                <label class="form-label">誕生日（西暦）</label>
+                <input type="date" class="form-input" value="2012-05-15">
+              </div>
+              <div class="form-group">
+                <label class="form-label">性別</label>
+                <select class="search-select" style="width: 100%;">
+                  <option value="">選択してください</option>
+                  <option selected>男子</option>
+                  <option>女子</option>
+                  <option>その他</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">兄弟</label>
+                <div style="border: 1px solid #ccc; padding: 6px; border-radius: 4px; background: #fafafa; font-size: 14px; min-height: 38px;">
+                  <ul id="sibling-list-display" style="list-style: none; margin: 0; padding: 0;">
+                    <li style="margin-bottom: 4px;">田中 次郎</li>
+                    <li>田中 花子</li>
+                  </ul>
+                </div>
+                <button class="btn-secondary" style="margin-top: 8px; font-size: 12px; padding: 4px 8px;" onclick="openSiblingModal()">兄弟編集</button>
+              </div>
+              <div class="form-group">
+                <label class="form-label">在校生ステータス</label>
+                <select class="search-select" style="width: 100%;">
+                  <option selected>在籍中</option>
+                  <option>休学中</option>
+                  <option>転校</option>
+                  <option>卒業</option>
+                </select>
+              </div>
+            </div>
+
+            <h4 class="section-title">連絡先・住所</h4>
+
+            <div class="form-group">
+              <label class="form-label">郵便番号</label>
+              <input type="text" class="form-input" style="width: 120px;" value="123-4567">
+            </div>
+            <div class="form-group">
+              <label class="form-label">住所</label>
+              <input type="text" class="form-input" value="東京都〇〇区△△町 1-2-3 レジデンスA 101">
+            </div>
+
+            <div class="form-row-3">
+              <div class="form-group">
+                <label class="form-label">電話番号1</label>
+                <input type="text" class="form-input" value="03-1234-5678">
+              </div>
+              <div class="form-group">
+                <label class="form-label">電話番号2</label>
+                <input type="text" class="form-input" value="090-8765-4321">
+              </div>
+              <div class="form-group">
+                <label class="form-label">保護者会役員</label>
+                <select class="search-select" style="width: 100%;">
+                  <option selected>なし</option>
+                  <option>会長</option>
+                  <option>副会長</option>
+                  <option>書記</option>
+                  <option>会計</option>
+                  <option>委員</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div class="form-group">
+                <label class="form-label">メールアドレス</label>
+                <input type="email" class="form-input" value="student.tanaka@school.ed.jp">
+              </div>
+              <div class="form-group">
+                <label class="form-label">メールパスワード</label>
+                <input type="text" class="form-input" value="tanaka2024">
+              </div>
+            </div>
+
+            <h4 class="section-title">学校活動・その他</h4>
+
+            <div class="form-row-4">
+              <div class="form-group">
+                <label class="form-label">前期クラブ</label>
+                <select class="search-select" style="width: 100%;">
+                  <option value="">なし</option>
+                  <option selected>サッカー部</option>
+                  <option>野球部</option>
+                  <option>吹奏楽部</option>
+                  <option>美術部</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">後期クラブ</label>
+                <select class="search-select" style="width: 100%;">
+                  <option value="">なし</option>
+                  <option selected>サッカー部</option>
+                  <option>野球部</option>
+                  <option>吹奏楽部</option>
+                  <option>美術部</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">前期委員会</label>
+                <select class="search-select" style="width: 100%;">
+                  <option value="">なし</option>
+                  <option>図書委員</option>
+                  <option selected>放送委員</option>
+                  <option>保健委員</option>
+                  <option>体育委員</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">後期委員会</label>
+                <select class="search-select" style="width: 100%;">
+                  <option value="">なし</option>
+                  <option>図書委員</option>
+                  <option>放送委員</option>
+                  <option>保健委員</option>
+                  <option>体育委員</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row-4">
+              <div class="form-group">
+                <label class="form-label">スポーツ教室登録</label>
+                <select class="search-select" style="width: 100%;">
+                  <option value="">未登録</option>
+                  <option selected>スイミング</option>
+                  <option>体操</option>
+                  <option>剣道</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">図書館ID</label>
+                <input type="text" class="form-input" value="LIB-98765">
+              </div>
+              <div class="form-group">
+                <label class="form-label">英語検定級</label>
+                <select class="search-select" style="width: 100%;">
+                  <option value="">未受験</option>
+                  <option>5級</option>
+                  <option selected>4級</option>
+                  <option>3級</option>
+                  <option>準2級</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">漢字検定級</label>
+                <select class="search-select" style="width: 100%;">
+                  <option value="">未受験</option>
+                  <option>10級</option>
+                  <option>9級</option>
+                  <option>8級</option>
+                  <option selected>7級</option>
+                  <option>6級</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Infirmary Data Tab -->
+        <div id="student-tab-health" class="tab-content">
+          <div class="card">
+            <div class="toolbar">
+              <div style="display: flex; align-items: center; gap: 16px;">
+                <h3 class="card-title" style="margin-bottom: 0;">保健室データ</h3>
+                <select class="search-select" style="width: 180px;">
+                  <option>6年時 (2024年度)</option>
+                  <option>5年時 (2023年度)</option>
+                  <option>4年時 (2022年度)</option>
+                  <option>3年時 (2021年度)</option>
+                  <option>2年時 (2020年度)</option>
+                  <option>1年時 (2019年度)</option>
+                </select>
+              </div>
+              <div class="toolbar-right">
+                <button class="btn-primary" style="width: auto; padding: 8px 16px;">保存</button>
+              </div>
+            </div>
+
+            <div class="form-row-3">
+              <div class="form-group">
+                <label class="form-label">氏名</label>
+                <input type="text" class="form-input" value="田中 太郎" readonly style="background-color: #f5f5f5;">
+              </div>
+              <div class="form-group">
+                <label class="form-label">学年</label>
+                <select class="search-select" style="width: 100%;">
+                  <option value="">選択してください</option>
+                  <option>1年</option>
+                  <option>2年</option>
+                  <option>3年</option>
+                  <option>4年</option>
+                  <option>5年</option>
+                  <option selected>6年</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">性別</label>
+                <input type="text" class="form-input" value="男子" readonly style="background-color: #f5f5f5;">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">特記事項</label>
+              <textarea class="form-input" style="height: 80px; resize: vertical;">アレルギーあり（そば、ピーナッツ）。運動制限なし。</textarea>
+            </div>
+
+            <h4 class="section-title">身体測定</h4>
+
+            <div class="form-row-4">
+              <div class="form-group">
+                <label class="form-label">４月身長 (cm)</label>
+                <input type="number" step="0.1" class="form-input" value="145.2">
+              </div>
+              <div class="form-group">
+                <label class="form-label">９月身長 (cm)</label>
+                <input type="number" step="0.1" class="form-input" value="147.5">
+              </div>
+              <div class="form-group">
+                <label class="form-label">１月身長 (cm)</label>
+                <input type="number" step="0.1" class="form-input" value="">
+              </div>
+              <div class="form-group">
+                <label class="form-label">身長発育差</label>
+                <input type="number" step="0.1" class="form-input" value="2.3" readonly
+                  style="background-color: #f5f5f5;">
+              </div>
+            </div>
+
+            <div class="form-row-4">
+              <div class="form-group">
+                <label class="form-label">４月体重 (kg)</label>
+                <input type="number" step="0.1" class="form-input" value="38.5">
+              </div>
+              <div class="form-group">
+                <label class="form-label">９月体重 (kg)</label>
+                <input type="number" step="0.1" class="form-input" value="40.1">
+              </div>
+              <div class="form-group">
+                <label class="form-label">１月体重 (kg)</label>
+                <input type="number" step="0.1" class="form-input" value="">
+              </div>
+              <div class="form-group">
+                <label class="form-label">体重発育差</label>
+                <input type="number" step="0.1" class="form-input" value="1.6" readonly
+                  style="background-color: #f5f5f5;">
+              </div>
+            </div>
+
+            <div class="form-row-4">
+              <div class="form-group">
+                <label class="form-label">４月肥満度 (%)</label>
+                <input type="number" step="0.1" class="form-input" value="2.1">
+              </div>
+              <div class="form-group">
+                <label class="form-label">９月肥満度 (%)</label>
+                <input type="number" step="0.1" class="form-input" value="1.8">
+              </div>
+              <div class="form-group">
+                <label class="form-label">１月肥満度 (%)</label>
+                <input type="number" step="0.1" class="form-input" value="">
+              </div>
+              <div class="form-group">
+                <label class="form-label">栄養状態</label>
+                <select class="search-select" style="width: 100%;">
+                  <option selected>普通</option>
+                  <option>肥満傾向</option>
+                  <option>やせ傾向</option>
+                  <option>要注意</option>
+                </select>
+              </div>
+            </div>
+
+            <h4 class="section-title">各種検診</h4>
+
+            <div class="form-row-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div class="form-group">
+                <label class="form-label">脊柱・胸部・四肢</label>
+                <input type="text" class="form-input" value="異常なし">
+              </div>
+              <div class="form-group">
+                <label class="form-label">皮膚疾患</label>
+                <input type="text" class="form-input" value="異常なし">
+              </div>
+            </div>
+
+            <div class="form-row-4">
+              <div class="form-group">
+                <label class="form-label">結核</label>
+                <select class="search-select" style="width: 100%;">
+                  <option selected>異常なし</option>
+                  <option>要精密検査</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">心電図</label>
+                <input type="text" class="form-input" value="実施済">
+              </div>
+              <div class="form-group">
+                <label class="form-label">心電図検査結果</label>
+                <input type="text" class="form-input" value="異常なし">
+              </div>
+              <div class="form-group">
+                <label class="form-label">心臓</label>
+                <input type="text" class="form-input" value="雑音なし">
+              </div>
+            </div>
+
+            <div class="form-row-4">
+              <div class="form-group">
+                <label class="form-label">眼科検診</label>
+                <input type="text" class="form-input" value="異常なし">
+              </div>
+              <div class="form-group">
+                <label class="form-label">耳鼻科検診</label>
+                <input type="text" class="form-input" value="異常なし">
+              </div>
+              <div class="form-group">
+                <label class="form-label">色覚検査</label>
+                <input type="text" class="form-input" value="実施済（異常なし）">
+              </div>
+              <div class="form-group">
+                <label class="form-label">その他</label>
+                <input type="text" class="form-input" value="-">
+              </div>
+            </div>
+
+            <div class="form-row-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div class="form-group">
+                <label class="form-label">尿 １次</label>
+                <input type="text" class="form-input" value="蛋白（-） 糖（-） 潜血（-）">
+              </div>
+              <div class="form-group">
+                <label class="form-label">尿 ２次</label>
+                <input type="text" class="form-input" value="-">
+              </div>
+            </div>
+
+            <h5 style="font-size: 13px; font-weight: 600; color: #1E3A8A; margin-top: 16px; margin-bottom: 8px;">視力検査
+            </h5>
+
+            <div class="form-row-4">
+              <div class="form-group">
+                <label class="form-label">４月裸右</label>
+                <select class="search-select" style="width: 100%;">
+                  <option>A</option>
+                  <option>B</option>
+                  <option selected>C</option>
+                  <option>D</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">４月裸左</label>
+                <select class="search-select" style="width: 100%;">
+                  <option>A</option>
+                  <option>B</option>
+                  <option selected>C</option>
+                  <option>D</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">４月矯右</label>
+                <select class="search-select" style="width: 100%;">
+                  <option selected>A</option>
+                  <option>B</option>
+                  <option>C</option>
+                  <option>D</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">４月矯左</label>
+                <select class="search-select" style="width: 100%;">
+                  <option selected>A</option>
+                  <option>B</option>
+                  <option>C</option>
+                  <option>D</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row-3">
+              <div class="form-group">
+                <label class="form-label">判定 (4月)</label>
+                <select class="search-select" style="width: 100%;">
+                  <option>A</option>
+                  <option>B</option>
+                  <option selected>C</option>
+                  <option>D</option>
+                  <option>眼科受診推奨</option>
+                </select>
+              </div>
+              <div class="form-group" style="grid-column: span 2;">
+                <label class="form-label">4月視力 特記事項</label>
+                <input type="text" class="form-input" value="眼鏡使用指示済み">
+              </div>
+            </div>
+
+            <!-- Note: Skipping 9月視力 for brevity in the form design, identical structure to above -->
+
+            <h5 style="font-size: 13px; font-weight: 600; color: #1E3A8A; margin-top: 16px; margin-bottom: 8px;">聴力検査
+            </h5>
+            <div class="form-row-4">
+              <div class="form-group">
+                <label class="form-label">右 1000Hz</label>
+                <input type="text" class="form-input" value="所見なし">
+              </div>
+              <div class="form-group">
+                <label class="form-label">右 4000Hz</label>
+                <input type="text" class="form-input" value="所見なし">
+              </div>
+              <div class="form-group">
+                <label class="form-label">左 1000Hz</label>
+                <input type="text" class="form-input" value="所見なし">
+              </div>
+              <div class="form-group">
+                <label class="form-label">左 4000Hz</label>
+                <input type="text" class="form-input" value="所見なし">
+              </div>
+            </div>
+
+            <h4 class="section-title">歯科検診</h4>
+
+            <h5 style="font-size: 13px; font-weight: 600; color: #1E3A8A; margin-top: 8px; margin-bottom: 8px;">５月</h5>
+            <div class="form-row-5">
+              <div class="form-group">
+                <label class="form-label">虫歯有無</label>
+                <select class="search-select" style="width: 100%;">
+                  <option value="no" selected>無</option>
+                  <option value="yes">有</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">処置歯有無</label>
+                <select class="search-select" style="width: 100%;">
+                  <option value="no">無</option>
+                  <option value="yes" selected>有</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">要注意歯有無</label>
+                <select class="search-select" style="width: 100%;">
+                  <option value="no" selected>無</option>
+                  <option value="yes">有</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">要観察歯有無</label>
+                <select class="search-select" style="width: 100%;">
+                  <option value="no" selected>無</option>
+                  <option value="yes">有</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">口腔・他</label>
+                <input type="text" class="form-input" value="異常なし">
+              </div>
+            </div>
+
+            <div class="form-row-5">
+              <div class="form-group">
+                <label class="form-label">顎関節</label>
+                <select class="search-select" style="width: 100%;">
+                  <option selected>0 (異常なし)</option>
+                  <option>1 (要観察)</option>
+                  <option>2 (要精密検査)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">歯列・咬合</label>
+                <select class="search-select" style="width: 100%;">
+                  <option selected>0 (異常なし)</option>
+                  <option>1 (要注意)</option>
+                  <option>2 (要精密検査)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">歯肉</label>
+                <select class="search-select" style="width: 100%;">
+                  <option selected>0 (異常なし)</option>
+                  <option>1 (要観察・CO)</option>
+                  <option>2 (要精密検査・GO)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">歯垢</label>
+                <select class="search-select" style="width: 100%;">
+                  <option selected>ほぼなし</option>
+                  <option>歯の1/3</option>
+                  <option>歯の2/3</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">矯正</label>
+                <input type="text" class="form-input" value="なし">
+              </div>
+            </div>
+
+            <!-- Note: Skipping １０月 for brevity in the form design, identical structure to above -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Graduates Page -->
+      <div id="page-graduates" class="page">
+        <div class="page-header">
+          <h1 class="page-title">卒業生管理</h1>
+          <p class="page-subtitle">卒業生情報の管理</p>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">検索・絞り込み</h3>
+          <div class="search-bar">
+            <div class="search-group">
+              <span class="search-label">学籍番号</span>
+              <input class="search-input" style="width: 100px;" placeholder="2024001">
+            </div>
+            <div class="search-group">
+              <span class="search-label">卒業年度</span>
+              <select class="search-select">
+                <option value="">全て</option>
+                <option>2024年度</option>
+                <option>2023年度</option>
+                <option>2022年度</option>
+              </select>
+            </div>
+            <div class="search-group">
+              <span class="search-label">氏名</span>
+              <input class="search-input" placeholder="氏名で検索">
+            </div>
+            <div class="search-group">
+              <span class="search-label">卒業後の進路</span>
+              <input class="search-input" placeholder="進路で検索">
+            </div>
+            <div class="search-group">
+              <span class="search-label">並び替え</span>
+              <select class="search-select">
+                <option value="">登録順</option>
+                <option>卒業年度順</option>
+                <option>五十音順</option>
+              </select>
+            </div>
+            <button class="btn-secondary">検索</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="toolbar">
+            <span style="font-size: 14px; color: #1A1A1A;">全 4 件</span>
+          </div>
+
+          <div style="overflow-x: auto; max-width: 100%; white-space: nowrap; padding-bottom: 12px;">
+            <table class="data-table graduates-table">
+              <thead>
+                <tr>
+                  <th class="col-id">学籍番号</th>
+                  <th class="col-grad-year">卒業年度</th>
+                  <th class="col-name">氏名(漢字)</th>
+                  <th>氏名(カナ)</th>
+                  <th>性別</th>
+                  <th>生年月日</th>
+                  <th>郵便番号</th>
+                  <th>住所</th>
+                  <th>メールアドレス</th>
+                  <th>電話番号1</th>
+                  <th>電話番号2</th>
+                  <th>卒業後の進路</th>
+                  <th class="col-actions">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cell-id">2024001</td>
+                  <td class="cell-grad-year">2024年度</td>
+                  <td class="cell-name"><strong>松本 大輔</strong></td>
+                  <td>マツモト ダイスケ</td>
+                  <td>男子</td>
+                  <td>2012-04-10</td>
+                  <td>123-4567</td>
+                  <td>東京都〇〇区△△町1-1</td>
+                  <td>matsumoto@example.com</td>
+                  <td>03-1111-2222</td>
+                  <td>090-1111-2222</td>
+                  <td>市立第一中学校</td>
+                  <td class="cell-actions">
+                    <button class="action-btn" onclick="openGraduateDetail(this)">編集</button>
+                    <button class="action-btn delete">削除</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="cell-id">2024002</td>
+                  <td class="cell-grad-year">2024年度</td>
+                  <td class="cell-name"><strong>井上 真理</strong></td>
+                  <td>イノウエ マリ</td>
+                  <td>女子</td>
+                  <td>2012-08-22</td>
+                  <td>123-4568</td>
+                  <td>東京都〇〇区△△町1-2</td>
+                  <td>inoue@example.com</td>
+                  <td>03-3333-4444</td>
+                  <td>090-3333-4444</td>
+                  <td>私立桜中学校</td>
+                  <td class="cell-actions">
+                    <button class="action-btn" onclick="openGraduateDetail(this)">編集</button>
+                    <button class="action-btn delete">削除</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="cell-id">2023001</td>
+                  <td class="cell-grad-year">2023年度</td>
+                  <td class="cell-name"><strong>木村 拓也</strong></td>
+                  <td>キムラ タクヤ</td>
+                  <td>男子</td>
+                  <td>2011-11-05</td>
+                  <td>123-4569</td>
+                  <td>東京都〇〇区△△町2-1</td>
+                  <td>kimura@example.com</td>
+                  <td>03-5555-6666</td>
+                  <td>090-5555-6666</td>
+                  <td>市立第二中学校</td>
+                  <td class="cell-actions">
+                    <button class="action-btn" onclick="openGraduateDetail(this)">編集</button>
+                    <button class="action-btn delete">削除</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="cell-id">2023002</td>
+                  <td class="cell-grad-year">2023年度</td>
+                  <td class="cell-name"><strong>林 美香</strong></td>
+                  <td>ハヤシ ミカ</td>
+                  <td>女子</td>
+                  <td>2012-01-30</td>
+                  <td>123-4570</td>
+                  <td>東京都〇〇区△△町2-2</td>
+                  <td>hayashi@example.com</td>
+                  <td>03-7777-8888</td>
+                  <td>090-7777-8888</td>
+                  <td>市立第一中学校</td>
+                  <td class="cell-actions">
+                    <button class="action-btn" onclick="openGraduateDetail(this)">編集</button>
+                    <button class="action-btn delete">削除</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Open Campus Page -->
+      <div id="page-openCampus" class="page">
+        <div class="page-header">
+          <h1 class="page-title">イベント参加者管理</h1>
+          <p class="page-subtitle">学校見学・オープンキャンパス参加者の管理</p>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">検索・絞り込み</h3>
+          <div class="search-bar">
+            <div class="search-group">
+              <span class="search-label">氏名</span>
+              <input class="search-input" placeholder="氏名で検索">
+            </div>
+            <div class="search-group">
+              <span class="search-label">受験生SEQ</span>
+              <input class="search-input" placeholder="SEQで検索">
+            </div>
+            <div class="search-group">
+              <span class="search-label">並び替え</span>
+              <select class="search-select">
+                <option value="">登録順</option>
+                <option>受験生SEQ順</option>
+                <option>五十音順</option>
+              </select>
+            </div>
+            <button class="btn-secondary">検索</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="toolbar">
+            <span style="font-size: 14px; color: #1A1A1A;">全 3 件</span>
+            <button class="btn-primary" style="width: auto; padding: 10px 20px;">+ 新規登録</button>
+          </div>
+
+          <div style="overflow-x: auto; max-width: 100%; white-space: nowrap; padding-bottom: 12px;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th class="col-fixed-name-only">氏名(漢字)</th>
+                  <th class="col-fixed-attr">学年</th>
+                  <th class="col-fixed-school">塾名称その他</th>
+                  <th>受験生SEQ</th>
+                  <th>イベント申込番号</th>
+                  <th>ログインメールアドレス</th>
+                  <th>申込時メールアドレス</th>
+                  <th>氏名(カナ)</th>
+                  <th>性別</th>
+                  <th>生年月日</th>
+                  <th>郵便番号</th>
+                  <th>都道府県</th>
+                  <th>市区町村</th>
+                  <th>町名・番地</th>
+                  <th>建物名・部屋番号</th>
+                  <th>電話番号</th>
+                  <th>イベント参加</th>
+                  <th>専願・併願</th>
+                  <th class="col-actions">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cell-fixed-name-only"><strong>小林 優太</strong></td>
+                  <td class="cell-fixed-attr">年中</td>
+                  <td class="cell-fixed-school">第三塾</td>
+                  <td>SEQ001</td>
+                  <td>EV001</td>
+                  <td>test1@login.com</td>
+                  <td>test1@apply.com</td>
+                  <td>コバヤシ ユウタ</td>
+                  <td>男子</td>
+                  <td>2012-05-10</td>
+                  <td>123-4567</td>
+                  <td>東京都</td>
+                  <td>〇〇区</td>
+                  <td>△△町1-1</td>
+                  <td>レジデンス101</td>
+                  <td>090-1111-2222</td>
+                  <td><span class="badge badge-inactive">参加予定</span></td>
+                  <td>専願</td>
+                  <td class="cell-actions">
+                    <button class="action-btn" onclick="openOpenCampusDetail(this)">編集</button>
+                    <button class="action-btn delete">削除</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="cell-fixed-name-only"><strong>石川 結衣</strong></td>
+                  <td class="cell-fixed-attr">年長</td>
+                  <td class="cell-fixed-school">桜塾</td>
+                  <td>SEQ002</td>
+                  <td>EV002</td>
+                  <td>test2@login.com</td>
+                  <td>test2@apply.com</td>
+                  <td>イシカワ ユイ</td>
+                  <td>女子</td>
+                  <td>2012-08-20</td>
+                  <td>123-4568</td>
+                  <td>東京都</td>
+                  <td>〇〇区</td>
+                  <td>△△町1-2</td>
+                  <td>-</td>
+                  <td>090-3333-4444</td>
+                  <td><span class="badge badge-active">参加済み</span></td>
+                  <td>併願</td>
+                  <td class="cell-actions">
+                    <button class="action-btn" onclick="openOpenCampusDetail(this)">編集</button>
+                    <button class="action-btn delete">削除</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="cell-fixed-name-only"><strong>前田 蓮</strong></td>
+                  <td class="cell-fixed-attr">年中</td>
+                  <td class="cell-fixed-school">-</td>
+                  <td>SEQ003</td>
+                  <td>EV003</td>
+                  <td>test3@login.com</td>
+                  <td>test3@apply.com</td>
+                  <td>マエダ レン</td>
+                  <td>男子</td>
+                  <td>2012-11-15</td>
+                  <td>123-4569</td>
+                  <td>東京都</td>
+                  <td>〇〇区</td>
+                  <td>△△町1-3</td>
+                  <td>グリーンハイツ201</td>
+                  <td>090-5555-6666</td>
+                  <td><span class="badge badge-inactive">参加予定</span></td>
+                  <td>専願</td>
+                  <td class="cell-actions">
+                    <button class="action-btn" onclick="openOpenCampusDetail(this)">編集</button>
+                    <button class="action-btn delete">削除</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Examinees Auth Page -->
+      <div id="page-examineesAuth" class="page">
+        <div class="page-header">
+          <h1 class="page-title">入試受験者管理</h1>
+          <p class="page-subtitle">閲覧にはパスワードが必要です</p>
+        </div>
+
+        <div class="card">
+          <div class="auth-screen">
+            <span class="icon">lock</span>
+            <h3>セキュリティ保護されたページ</h3>
+            <p>入試受験者情報を閲覧するには、閲覧用パスワードを入力してください。</p>
+            <div style="text-align: left;">
+              <label class="form-label">閲覧用パスワード</label>
+              <input type="password" class="form-input" placeholder="パスワードを入力">
+              <button class="btn-primary" onclick="showPage('examinees')">認証する</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Examinees Page -->
+      <div id="page-examinees" class="page">
+        <div class="page-header">
+          <h1 class="page-title">入試受験者管理</h1>
+          <p class="page-subtitle">入試受験者情報の管理</p>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">検索・絞り込み</h3>
+          <div class="search-bar">
+            <div class="search-group">
+              <span class="search-label">受験番号</span>
+              <input class="search-input" placeholder="E2024001">
+            </div>
+            <div class="search-group">
+              <span class="search-label">受験区分</span>
+              <select class="search-select">
+                <option value="">全て</option>
+                <option>一般入試</option>
+                <option>推薦入試</option>
+              </select>
+            </div>
+            <div class="search-group">
+              <span class="search-label">合否</span>
+              <select class="search-select">
+                <option value="">全て</option>
+                <option>合格</option>
+                <option>不合格</option>
+              </select>
+            </div>
+            <div class="search-group">
+              <span class="search-label">並び替え</span>
+              <select class="search-select">
+                <option value="">登録順</option>
+                <option>受験番号順</option>
+                <option>五十音順</option>
+              </select>
+            </div>
+            <button class="btn-secondary">検索</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="toolbar">
+            <div style="display: flex; align-items: center; gap: 16px;">
+              <span style="font-size: 14px; color: #1A1A1A;">全 5 件</span>
+            </div>
+            <div class="toolbar-right">
+              <button class="btn-secondary">CSVインポート</button>
+              <button class="btn-primary" style="width: auto; padding: 10px 20px;">+ 新規登録</button>
+            </div>
+          </div>
+
+          <div style="overflow-x: auto; max-width: 100%; white-space: nowrap; padding-bottom: 12px;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th class="col-fixed-name-only">氏名(漢字)</th>
+                  <th class="col-fixed-attr">幼稚園</th>
+                  <th class="col-fixed-school">塾</th>
+                  <th>受験番号</th>
+                  <th>氏名(カナ)</th>
+                  <th>性別</th>
+                  <th>生年月日</th>
+                  <th>判定</th>
+                  <th>郵便番号</th>
+                  <th>住所</th>
+                  <th>保護者名</th>
+                  <th>兄姉</th>
+                  <th>縁故</th>
+                  <th>専願/併願/推薦</th>
+                  <th>推薦状</th>
+                  <th>pre テスト（点数）</th>
+                  <th>個別相談</th>
+                  <th>備考</th>
+                  <th class="col-actions">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cell-fixed-name-only"><strong>藤井 大地</strong></td>
+                  <td class="cell-fixed-attr">第三幼稚園</td>
+                  <td class="cell-fixed-school">なし</td>
+                  <td>E2024001</td>
+                  <td>フジイ ダイチ</td>
+                  <td>男子</td>
+                  <td>2012-04-01</td>
+                  <td><span class="badge badge-active">合格</span></td>
+                  <td>123-4567</td>
+                  <td>東京都〇〇区△△町1-1</td>
+                  <td>藤井 健太</td>
+                  <td>兄（中2）</td>
+                  <td>なし</td>
+                  <td>一般</td>
+                  <td>あり</td>
+                  <td>85</td>
+                  <td>済</td>
+                  <td>-</td>
+                  <td class="cell-actions">
+                    <button class="action-btn" onclick="openExamineeDetail(this)">編集</button>
+                    <button class="action-btn delete">削除</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="cell-fixed-name-only"><strong>西村 美月</strong></td>
+                  <td class="cell-fixed-attr">桜幼稚園</td>
+                  <td class="cell-fixed-school">桜塾</td>
+                  <td>E2024002</td>
+                  <td>ニシムラ ミヅキ</td>
+                  <td>女子</td>
+                  <td>2012-06-12</td>
+                  <td><span class="badge badge-active">合格</span></td>
+                  <td>123-4568</td>
+                  <td>東京都〇〇区△△町1-2</td>
+                  <td>西村 陽子</td>
+                  <td>なし</td>
+                  <td>なし</td>
+                  <td>一般</td>
+                  <td>なし</td>
+                  <td>92</td>
+                  <td>済</td>
+                  <td>-</td>
+                  <td class="cell-actions">
+                    <button class="action-btn" onclick="openExamineeDetail(this)">編集</button>
+                    <button class="action-btn delete">削除</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="cell-fixed-name-only"><strong>岡田 陸</strong></td>
+                  <td class="cell-fixed-attr">さくら保育園</td>
+                  <td class="cell-fixed-school">なし</td>
+                  <td>E2024003</td>
+                  <td>オカダ リク</td>
+                  <td>男子</td>
+                  <td>2012-09-23</td>
+                  <td><span class="badge badge-active">合格</span></td>
+                  <td>123-4569</td>
+                  <td>東京都〇〇区△△町1-3</td>
+                  <td>岡田 修</td>
+                  <td>なし</td>
+                  <td>父が卒業生</td>
+                  <td>推薦</td>
+                  <td>あり</td>
+                  <td>-</td>
+                  <td>未</td>
+                  <td>-</td>
+                  <td class="cell-actions">
+                    <button class="action-btn" onclick="openExamineeDetail(this)">編集</button>
+                    <button class="action-btn delete">削除</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="cell-fixed-name-only"><strong>原田 結菜</strong></td>
+                  <td class="cell-fixed-attr">第一幼稚園</td>
+                  <td class="cell-fixed-school">第一塾</td>
+                  <td>E2024004</td>
+                  <td>ハラダ ユイナ</td>
+                  <td>女子</td>
+                  <td>2012-12-05</td>
+                  <td><span class="badge badge-inactive">不合格</span></td>
+                  <td>123-4570</td>
+                  <td>東京都〇〇区△△町1-4</td>
+                  <td>原田 誠</td>
+                  <td>姉（高1）</td>
+                  <td>なし</td>
+                  <td>一般</td>
+                  <td>なし</td>
+                  <td>45</td>
+                  <td>済</td>
+                  <td>-</td>
+                  <td class="cell-actions">
+                    <button class="action-btn" onclick="openExamineeDetail(this)">編集</button>
+                    <button class="action-btn delete">削除</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="cell-fixed-name-only"><strong>藤田 翼</strong></td>
+                  <td class="cell-fixed-attr">第二保育園</td>
+                  <td class="cell-fixed-school">進学塾A</td>
+                  <td>E2024005</td>
+                  <td>フジタ ツバサ</td>
+                  <td>男子</td>
+                  <td>2013-02-18</td>
+                  <td><span class="badge badge-active">合格</span></td>
+                  <td>123-4571</td>
+                  <td>東京都〇〇区△△町1-5</td>
+                  <td>藤田 浩二</td>
+                  <td>なし</td>
+                  <td>なし</td>
+                  <td>一般</td>
+                  <td>なし</td>
+                  <td>78</td>
+                  <td>済</td>
+                  <td>-</td>
+                  <td class="cell-actions">
+                    <button class="action-btn" onclick="openExamineeDetail(this)">編集</button>
+                    <button class="action-btn delete">削除</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pagination">
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">次へ →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Export Page -->
+      <div id="page-export" class="page">
+        <div class="page-header">
+          <h1 class="page-title">データ出力</h1>
+          <p class="page-subtitle">帳票・データのエクスポート</p>
+        </div>
+
+        <div class="tabs">
+          <div class="tab active" data-tab="fixed" onclick="showExportTab('fixed')">固定フォーマット</div>
+          <div class="tab" data-tab="custom" onclick="showExportTab('custom')">カスタムフォーマット</div>
+          <div class="tab" data-tab="history" onclick="showExportTab('history')">出力履歴</div>
+        </div>
+
+        <!-- Fixed Format - Step 1 -->
+        <div id="export-fixed-1" class="card">
+          <h3 class="card-title">出力フォーマットを選択</h3>
+          <div class="format-grid">
+            <div class="format-card" onclick="showExportStep('fixed', 2)">
+              <span class="icon">description</span>
+              <span class="name">学籍簿</span>
+            </div>
+            <div class="format-card" onclick="showExportStep('fixed', 2)">
+              <span class="icon">fact_check</span>
+              <span class="name">出席簿</span>
+            </div>
+            <div class="format-card" onclick="showExportStep('fixed', 2)">
+              <span class="icon">phone</span>
+              <span class="name">連絡網リスト</span>
+            </div>
+            <div class="format-card" onclick="showExportStep('fixed', 2)">
+              <span class="icon">label</span>
+              <span class="name">タックシール</span>
+            </div>
+            <div class="format-card" onclick="showExportStep('fixed', 2)">
+              <span class="icon">medical_services</span>
+              <span class="name">健康診断記録</span>
+            </div>
+
+            <div class="format-card" onclick="downloadCSVTemplate()">
+              <span class="icon">download</span>
+              <span class="name">一括登録用CSV<br>（テンプレート）</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fixed Format - Step 2 -->
+        <div id="export-fixed-2" class="card hidden">
+          <div class="header-with-back">
+            <h3 class="card-title">出力対象を選択<span class="sub-info">（学籍簿）</span></h3>
+          </div>
+
+          <div class="search-bar">
+            <div class="search-group">
+              <span class="search-label">学年</span>
+              <select class="search-select">
+                <option value="">全て</option>
+                <option>1年</option>
+                <option>2年</option>
+                <option>3年</option>
+                <option>4年</option>
+                <option>5年</option>
+                <option>6年</option>
+              </select>
+            </div>
+            <div class="search-group">
+              <span class="search-label">クラス</span>
+              <select class="search-select">
+                <option value="">全て</option>
+                <option>A組</option>
+                <option>B組</option>
+              </select>
+            </div>
+            <button class="btn-secondary">絞り込み</button>
+          </div>
+
+          <div class="checkbox-list">
+            <label class="checkbox-item header">
+              <input type="checkbox">
+              <strong>全選択</strong>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox">
+              田中 太郎 (6年A組)
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox">
+              鈴木 花子 (6年A組)
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox">
+              佐藤 健太 (5年B組)
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox">
+              山田 美咲 (5年A組)
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox">
+              高橋 翔 (4年B組)
+            </label>
+          </div>
+
+          <div class="export-buttons" style="display: flex; justify-content: space-between; align-items: center;">
+            <button class="btn-secondary" onclick="showExportStep('fixed', 1)">← 戻る</button>
+            <button class="btn-export btn-export-pdf" onclick="openExportModal('fixed')">出力</button>
+          </div>
+        </div>
+
+        <!-- Custom Format - Step 1 -->
+        <div id="export-custom-1" class="card hidden">
+          <h3 class="card-title">出力データ種別と項目を設定</h3>
+          <div class="form-group" style="margin-bottom: 24px;">
+            <label class="form-label" style="font-weight: 500;">出力するデータ種別</label>
+            <select class="search-select" id="customExportTypeSelect"
+              style="width: 100%; max-width: 300px; margin-top: 8px;" onchange="updateCustomExportFields()">
+              <option value="students">在校生</option>
+              <option value="graduates">卒業生</option>
+              <option value="opencampus">イベント参加者</option>
+              <option value="examinees">入試受験者</option>
+            </select>
+          </div>
+          <div style="font-size: 14px; font-weight: 500; color: #1A1A1A; margin-bottom: 12px;">出力項目を選択</div>
+
+          <!-- 在校生向け項目 -->
+          <div id="checkbox-grid-students">
+            <div style="margin-bottom: 8px;">
+              <label><strong><input type="checkbox" onchange="toggleCategoryCheckboxes(this, 'chk-student-basic')"> 基本情報</strong></label>
+              <div class="checkbox-grid" style="margin-left: 16px; margin-top: 4px;">
+                <label><input type="checkbox" class="chk-student-basic"> 学籍番号</label>
+                <label><input type="checkbox" class="chk-student-basic"> 氏名(漢字)</label>
+                <label><input type="checkbox" class="chk-student-basic"> 氏名(カナ)</label>
+                <label><input type="checkbox" class="chk-student-basic"> 学年</label>
+                <label><input type="checkbox" class="chk-student-basic"> クラス番号</label>
+                <label><input type="checkbox" class="chk-student-basic"> 縦割り班番号</label>
+                <label><input type="checkbox" class="chk-student-basic"> 誕生日（西暦）</label>
+                <label><input type="checkbox" class="chk-student-basic"> 兄弟</label>
+                <label><input type="checkbox" class="chk-student-basic"> 在校生ステータス</label>
+              </div>
+            </div>
+
+            <div style="margin-bottom: 8px;">
+              <label><strong><input type="checkbox" onchange="toggleCategoryCheckboxes(this, 'chk-student-contact')"> 連絡先情報</strong></label>
+              <div class="checkbox-grid" style="margin-left: 16px; margin-top: 4px;">
+                <label><input type="checkbox" class="chk-student-contact"> 郵便番号</label>
+                <label><input type="checkbox" class="chk-student-contact"> 住所</label>
+                <label><input type="checkbox" class="chk-student-contact"> 電話番号1</label>
+                <label><input type="checkbox" class="chk-student-contact"> 電話番号2</label>
+                <label><input type="checkbox" class="chk-student-contact"> メールアドレス</label>
+                <label><input type="checkbox" class="chk-student-contact"> メールパスワード</label>
+              </div>
+            </div>
+
+            <div style="margin-bottom: 8px;">
+              <label><strong><input type="checkbox" onchange="toggleCategoryCheckboxes(this, 'chk-student-life')"> 学校生活・活動</strong></label>
+              <div class="checkbox-grid" style="margin-left: 16px; margin-top: 4px;">
+                <label><input type="checkbox" class="chk-student-life"> スポーツ教室登録</label>
+                <label><input type="checkbox" class="chk-student-life"> 前期クラブ</label>
+                <label><input type="checkbox" class="chk-student-life"> 後期クラブ</label>
+                <label><input type="checkbox" class="chk-student-life"> 前期委員会</label>
+                <label><input type="checkbox" class="chk-student-life"> 後期委員会</label>
+                <label><input type="checkbox" class="chk-student-life"> 保護者会役員</label>
+                <label><input type="checkbox" class="chk-student-life"> タブレット番号</label>
+                <label><input type="checkbox" class="chk-student-life"> 図書館ID</label>
+                <label><input type="checkbox" class="chk-student-life"> 英語検定級</label>
+                <label><input type="checkbox" class="chk-student-life"> 漢字検定級</label>
+              </div>
+            </div>
+
+            <div style="margin-bottom: 8px;">
+              <label><strong><input type="checkbox" onchange="toggleCategoryCheckboxes(this, 'chk-student-health')"> 身体・検診情報</strong></label>
+              <div class="checkbox-grid" style="margin-left: 16px; margin-top: 4px;">
+                <label><input type="checkbox" class="chk-student-health"> 4月 身長</label>
+                <label><input type="checkbox" class="chk-student-health"> 4月 体重</label>
+                <label><input type="checkbox" class="chk-student-health"> 9月 身長</label>
+                <label><input type="checkbox" class="chk-student-health"> 9月 体重</label>
+                <label><input type="checkbox" class="chk-student-health"> 1月 身長</label>
+                <label><input type="checkbox" class="chk-student-health"> 1月 体重</label>
+                <label><input type="checkbox" class="chk-student-health"> 右眼 視力</label>
+                <label><input type="checkbox" class="chk-student-health"> 左眼 視力</label>
+                <label><input type="checkbox" class="chk-student-health"> 右耳 聴力</label>
+                <label><input type="checkbox" class="chk-student-health"> 左耳 聴力</label>
+                <label><input type="checkbox" class="chk-student-health"> 尿検査</label>
+                <label><input type="checkbox" class="chk-student-health"> 5月 う歯数</label>
+                <label><input type="checkbox" class="chk-student-health"> 10月 う歯数</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 卒業生向け項目 -->
+          <div class="hidden" id="checkbox-grid-graduates">
+            <div style="margin-bottom: 8px;">
+              <label><strong><input type="checkbox" onchange="toggleCategoryCheckboxes(this, 'chk-grad-basic')"> 基本情報</strong></label>
+              <div class="checkbox-grid" style="margin-left: 16px; margin-top: 4px;">
+                <label><input type="checkbox" class="chk-grad-basic"> 学籍番号</label>
+                <label><input type="checkbox" class="chk-grad-basic"> 卒業年度</label>
+                <label><input type="checkbox" class="chk-grad-basic"> 氏名(漢字)</label>
+                <label><input type="checkbox" class="chk-grad-basic"> 氏名(カナ)</label>
+                <label><input type="checkbox" class="chk-grad-basic"> 性別</label>
+                <label><input type="checkbox" class="chk-grad-basic"> 生年月日</label>
+              </div>
+            </div>
+            <div style="margin-bottom: 8px;">
+              <label><strong><input type="checkbox" onchange="toggleCategoryCheckboxes(this, 'chk-grad-contact')"> 連絡先・進路</strong></label>
+              <div class="checkbox-grid" style="margin-left: 16px; margin-top: 4px;">
+                <label><input type="checkbox" class="chk-grad-contact"> 郵便番号</label>
+                <label><input type="checkbox" class="chk-grad-contact"> 住所</label>
+                <label><input type="checkbox" class="chk-grad-contact"> メールアドレス</label>
+                <label><input type="checkbox" class="chk-grad-contact"> 電話番号1</label>
+                <label><input type="checkbox" class="chk-grad-contact"> 電話番号2</label>
+                <label><input type="checkbox" class="chk-grad-contact"> 卒業後の進路</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- イベント参加者向け項目 -->
+          <div class="hidden" id="checkbox-grid-opencampus">
+            <div style="margin-bottom: 8px;">
+              <label><strong><input type="checkbox" onchange="toggleCategoryCheckboxes(this, 'chk-oc-basic')"> 基本情報</strong></label>
+              <div class="checkbox-grid" style="margin-left: 16px; margin-top: 4px;">
+                <label><input type="checkbox" class="chk-oc-basic"> 受験生SEQ</label>
+                <label><input type="checkbox" class="chk-oc-basic"> 氏名(漢字)</label>
+                <label><input type="checkbox" class="chk-oc-basic"> 氏名(カナ)</label>
+                <label><input type="checkbox" class="chk-oc-basic"> 性別</label>
+                <label><input type="checkbox" class="chk-oc-basic"> 生年月日</label>
+              </div>
+            </div>
+            <div style="margin-bottom: 8px;">
+              <label><strong><input type="checkbox" onchange="toggleCategoryCheckboxes(this, 'chk-oc-contact')"> 連絡先・申込情報</strong></label>
+              <div class="checkbox-grid" style="margin-left: 16px; margin-top: 4px;">
+                <label><input type="checkbox" class="chk-oc-contact"> イベント申込番号</label>
+                <label><input type="checkbox" class="chk-oc-contact"> ログインメールアドレス</label>
+                <label><input type="checkbox" class="chk-oc-contact"> 申込時メールアドレス</label>
+                <label><input type="checkbox" class="chk-oc-contact"> 郵便番号</label>
+                <label><input type="checkbox" class="chk-oc-contact"> 都道府県</label>
+                <label><input type="checkbox" class="chk-oc-contact"> 市区町村</label>
+                <label><input type="checkbox" class="chk-oc-contact"> 町名・番地</label>
+                <label><input type="checkbox" class="chk-oc-contact"> 建物名・部屋番号</label>
+                <label><input type="checkbox" class="chk-oc-contact"> 電話番号</label>
+              </div>
+            </div>
+            <div style="margin-bottom: 8px;">
+              <label><strong><input type="checkbox" onchange="toggleCategoryCheckboxes(this, 'chk-oc-attr')"> 属性・その他</strong></label>
+              <div class="checkbox-grid" style="margin-left: 16px; margin-top: 4px;">
+                <label><input type="checkbox" class="chk-oc-attr"> 塾名称その他</label>
+                <label><input type="checkbox" class="chk-oc-attr"> イベント参加</label>
+                <label><input type="checkbox" class="chk-oc-attr"> 専願・併願</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 入試受験者向け項目 -->
+          <div class="hidden" id="checkbox-grid-examinees">
+            <div style="margin-bottom: 8px;">
+              <label><strong><input type="checkbox" onchange="toggleCategoryCheckboxes(this, 'chk-exam-basic')"> 基本情報</strong></label>
+              <div class="checkbox-grid" style="margin-left: 16px; margin-top: 4px;">
+                <label><input type="checkbox" class="chk-exam-basic"> 受験番号</label>
+                <label><input type="checkbox" class="chk-exam-basic"> 氏名(漢字)</label>
+                <label><input type="checkbox" class="chk-exam-basic"> 氏名(カナ)</label>
+                <label><input type="checkbox" class="chk-exam-basic"> 性別</label>
+                <label><input type="checkbox" class="chk-exam-basic"> 生年月日</label>
+                <label><input type="checkbox" class="chk-exam-basic"> 判定</label>
+                <label><input type="checkbox" class="chk-exam-basic"> 保護者名</label>
+              </div>
+            </div>
+            <div style="margin-bottom: 8px;">
+              <label><strong><input type="checkbox" onchange="toggleCategoryCheckboxes(this, 'chk-exam-contact')"> 連絡先・所属情報</strong></label>
+              <div class="checkbox-grid" style="margin-left: 16px; margin-top: 4px;">
+                <label><input type="checkbox" class="chk-exam-contact"> 郵便番号</label>
+                <label><input type="checkbox" class="chk-exam-contact"> 住所</label>
+                <label><input type="checkbox" class="chk-exam-contact"> 幼稚園</label>
+                <label><input type="checkbox" class="chk-exam-contact"> 塾</label>
+              </div>
+            </div>
+            <div style="margin-bottom: 8px;">
+              <label><strong><input type="checkbox" onchange="toggleCategoryCheckboxes(this, 'chk-exam-other')"> 属性・その他</strong></label>
+              <div class="checkbox-grid" style="margin-left: 16px; margin-top: 4px;">
+                <label><input type="checkbox" class="chk-exam-other"> 兄姉</label>
+                <label><input type="checkbox" class="chk-exam-other"> 縁故</label>
+                <label><input type="checkbox" class="chk-exam-other"> 専願/併願/推薦</label>
+                <label><input type="checkbox" class="chk-exam-other"> 推薦状</label>
+                <label><input type="checkbox" class="chk-exam-other"> pre テスト（点数）</label>
+                <label><input type="checkbox" class="chk-exam-other"> 個別相談</label>
+                <label><input type="checkbox" class="chk-exam-other"> 備考</label>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top: 24px; text-align: right;">
+            <button class="btn-primary" style="width: auto;" onclick="showExportStep('custom', 2)">次へ →</button>
+          </div>
+        </div>
+
+        <!-- Custom Format - Step 2 -->
+        <div id="export-custom-2" class="card hidden">
+          <div class="header-with-back">
+            <h3 class="card-title">出力対象を選択</h3>
+          </div>
+
+          <div class="search-bar">
+            <div class="search-group">
+              <span class="search-label">学年</span>
+              <select class="search-select">
+                <option value="">全て</option>
+                <option>1年</option>
+                <option>2年</option>
+                <option>3年</option>
+                <option>4年</option>
+                <option>5年</option>
+                <option>6年</option>
+              </select>
+            </div>
+            <div class="search-group">
+              <span class="search-label">クラス</span>
+              <select class="search-select">
+                <option value="">全て</option>
+                <option>A組</option>
+                <option>B組</option>
+              </select>
+            </div>
+            <button class="btn-secondary">絞り込み</button>
+          </div>
+
+          <div class="checkbox-list">
+            <label class="checkbox-item header">
+              <input type="checkbox">
+              <strong>全選択</strong>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox">
+              田中 太郎 (6年A組)
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox">
+              鈴木 花子 (6年A組)
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox">
+              佐藤 健太 (5年B組)
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox">
+              山田 美咲 (5年A組)
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox">
+              高橋 翔 (4年B組)
+            </label>
+          </div>
+
+          <div class="export-buttons" style="display: flex; justify-content: space-between; align-items: center;">
+            <button class="btn-secondary" onclick="showExportStep('custom', 1)">← 戻る</button>
+            <button class="btn-export btn-export-pdf" onclick="openExportModal('custom')">出力</button>
+          </div>
+        </div>
+
+        <!-- History -->
+        <div id="export-history" class="card hidden">
+          <h3 class="card-title">出力履歴</h3>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>出力日時</th>
+                <th>データ種別</th>
+                <th>フォーマット</th>
+                <th>出力件数</th>
+                <th>実行者</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>2024/01/15 10:30</td>
+                <td>在校生</td>
+                <td>学籍簿</td>
+                <td>245件</td>
+                <td>山本 一郎</td>
+                <td><button class="action-btn">再ダウンロード</button></td>
+              </tr>
+              <tr>
+                <td>2024/01/14 15:00</td>
+                <td>在校生</td>
+                <td>連絡網リスト</td>
+                <td>120件</td>
+                <td>加藤 智子</td>
+                <td><button class="action-btn">再ダウンロード</button></td>
+              </tr>
+              <tr>
+                <td>2024/01/13 09:15</td>
+                <td>入試受験者</td>
+                <td>タックシール</td>
+                <td>80件</td>
+                <td>山本 一郎</td>
+                <td><button class="action-btn">再ダウンロード</button></td>
+              </tr>
+              <tr>
+                <td>2024/01/12 14:20</td>
+                <td>卒業生</td>
+                <td>カスタム出力</td>
+                <td>150件</td>
+                <td>吉田 浩二</td>
+                <td><button class="action-btn">再ダウンロード</button></td>
+              </tr>
+              <tr>
+                <td>2024/01/10 11:00</td>
+                <td>イベント参加者</td>
+                <td>出席簿</td>
+                <td>45件</td>
+                <td>山本 一郎</td>
+                <td><button class="action-btn">再ダウンロード</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Mail Page -->
+      <div id="page-mail" class="page">
+        <div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-end;">
+          <div>
+            <h1 class="page-title">メール配信</h1>
+            <p class="page-subtitle">保護者・児童へのメール一斉配信</p>
+          </div>
+          <div style="background-color: #EFF6FF; padding: 12px 20px; border-radius: 8px; border: 1px solid #BFDBFE;">
+            <div style="font-size: 12px; color: #1E3A8A; font-weight: 500; margin-bottom: 4px;">本日の送信可能件数</div>
+            <div style="display: flex; align-items: baseline; gap: 4px;">
+              <span style="font-size: 20px; font-weight: bold; color: #1E3A8A;">0</span>
+              <span style="font-size: 14px; color: #666;">/ 100 件</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="steps-indicator">
+          <div class="step active" data-step="1">1. メール作成 <span style="color: #ccc; margin-left: 8px;">&gt;</span></div>
+          <div class="step" data-step="2">2. 送信先選択 <span style="color: #ccc; margin-left: 8px;">&gt;</span></div>
+          <div class="step" data-step="3">3. 確認・配信</div>
+        </div>
+
+        <!-- Mail Step 1 -->
+        <div id="mail-step-1" class="card">
+          <h3 class="card-title">メール内容作成</h3>
+
+          <div class="form-group">
+            <label class="form-label">件名</label>
+            <input class="form-input" style="margin-bottom: 0;" placeholder="メールの件名を入力">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">本文</label>
+            <textarea class="form-input" style="margin-bottom: 0; height: 200px; resize: vertical;"
+              placeholder="メール本文を入力..."></textarea>
+          </div>
+
+
+          <div style="margin-top: 24px; text-align: right;">
+            <button class="btn-primary" style="width: auto;" onclick="showMailStep(2)">次へ →</button>
+          </div>
+        </div>
+
+        <!-- Mail Step 2 -->
+        <div id="mail-step-2" class="card hidden">
+          <h3 class="card-title">送信先を選択</h3>
+
+          <div class="search-bar">
+            <div class="search-group">
+              <span class="search-label">学年</span>
+              <select class="search-select">
+                <option value="">全て</option>
+                <option>1年</option>
+                <option>2年</option>
+                <option>3年</option>
+                <option>4年</option>
+                <option>5年</option>
+                <option>6年</option>
+              </select>
+            </div>
+            <div class="search-group">
+              <span class="search-label">クラス</span>
+              <select class="search-select">
+                <option value="">全て</option>
+                <option>A組</option>
+                <option>B組</option>
+              </select>
+            </div>
+            <div class="search-group">
+              <span class="search-label">送信対象</span>
+              <select class="search-select">
+                <option>保護者</option>
+                <option>児童</option>
+                <option>両方</option>
+              </select>
+            </div>
+            <button class="btn-secondary">絞り込み</button>
+          </div>
+
+          <div class="checkbox-list">
+            <label class="checkbox-item header">
+              <input type="checkbox">
+              <strong>全選択</strong>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox">
+              田中 一郎（田中 太郎 保護者）
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox">
+              鈴木 次郎（鈴木 花子 保護者）
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox">
+              佐藤 三郎（佐藤 健太 保護者）
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox">
+              山田 四郎（山田 美咲 保護者）
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox">
+              高橋 五郎（高橋 翔 保護者）
+            </label>
+          </div>
+
+          <div style="margin-top: 24px; display: flex; justify-content: space-between;">
+            <button class="btn-secondary" style="width: auto;" onclick="showMailStep(1)">← 戻る</button>
+            <button class="btn-primary" style="width: auto;" onclick="showMailStep(3)">次へ →</button>
+          </div>
+        </div>
+
+        <!-- Mail Step 3 -->
+        <div id="mail-step-3" class="card hidden">
+          <h3 class="card-title">内容確認</h3>
+
+          <div class="confirm-preview">
+            <div class="confirm-item">
+              <span class="confirm-label">件名</span>
+              <div class="confirm-value">冬休みのお知らせについて</div>
+            </div>
+            <div class="confirm-item">
+              <span class="confirm-label">送信対象</span>
+              <div class="confirm-value">8件</div>
+            </div>
+
+            <div class="confirm-item">
+              <span class="confirm-label">本文</span>
+              <div class="confirm-body">
+                保護者の皆様へ<br><br>
+                いつもお世話になっております。<br>
+                冬休みの期間と注意事項についてお知らせいたします...
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 24px; display: flex; justify-content: space-between;">
+            <button class="btn-secondary" style="width: auto;" onclick="showMailStep(2)">← 戻る</button>
+            <button class="btn-export btn-export-pdf">配信する</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Teachers Page -->
+      <div id="page-teachers" class="page">
+        <div class="page-header">
+          <h1 class="page-title">教員管理</h1>
+          <p class="page-subtitle">教職員アカウントの管理</p>
+        </div>
+
+        <div class="card">
+          <div class="toolbar">
+            <span style="font-size: 14px; color: #1A1A1A;">全 4 件</span>
+            <button class="btn-primary" style="width: auto; padding: 10px 20px;" onclick="openModal('teacherModal')">+
+              新規招待</button>
+          </div>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>氏名</th>
+                <th>メールアドレス</th>
+                <th>権限</th>
+                <th>ステータス</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>山本 一郎</strong></td>
+                <td>yamamoto@school.ed.jp</td>
+                <td><span class="badge badge-admin">管理者</span></td>
+                <td><span class="badge badge-active">有効</span></td>
+                <td>
+                  <button class="action-btn">編集</button>
+                  <button class="action-btn delete">停止</button>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>加藤 智子</strong></td>
+                <td>kato@school.ed.jp</td>
+                <td><span class="badge">一般教員</span></td>
+                <td><span class="badge badge-active">有効</span></td>
+                <td>
+                  <button class="action-btn">編集</button>
+                  <button class="action-btn delete">停止</button>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>吉田 浩二</strong></td>
+                <td>yoshida@school.ed.jp</td>
+                <td><span class="badge">一般教員</span></td>
+                <td><span class="badge badge-active">有効</span></td>
+                <td>
+                  <button class="action-btn">編集</button>
+                  <button class="action-btn delete">停止</button>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>清水 美穂</strong></td>
+                <td>shimizu@school.ed.jp</td>
+                <td><span class="badge">一般教員</span></td>
+                <td><span class="badge badge-inactive">停止中</span></td>
+                <td>
+                  <button class="action-btn">編集</button>
+                  <button class="action-btn delete">停止</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Master Data Page -->
+      <div id="page-master" class="page">
+        <div class="page-header">
+          <h1 class="page-title">マスタ管理</h1>
+          <p class="page-subtitle">システムで使用する各種マスタデータの管理</p>
+        </div>
+
+        <div class="tabs" style="margin-bottom: 24px;">
+          <div class="tab active" data-master-tab="sports" onclick="showMasterTab('sports')">スポーツ教室</div>
+          <div class="tab" data-master-tab="club" onclick="showMasterTab('club')">クラブ</div>
+          <div class="tab" data-master-tab="committee" onclick="showMasterTab('committee')">委員会</div>
+          <div class="tab" data-master-tab="pta" onclick="showMasterTab('pta')">保護者会役員</div>
+          <div class="tab" data-master-tab="mixed-group" onclick="showMasterTab('mixed-group')">縦割り班</div>
+        </div>
+
+        <!-- Master: Sports -->
+        <div id="master-tab-sports" class="tab-content active">
+          <div class="card">
+            <div class="toolbar">
+              <span style="font-size: 14px; color: #1A1A1A;">全 3 件</span>
+              <button class="btn-primary" style="width: auto; padding: 10px 20px;" onclick="openMasterModal('スポーツ教室')">+ 新規登録</button>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>名称</th>
+                  <th style="width: 150px; text-align: center;">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>スイミング</td>
+                  <td style="text-align: right;"><button class="action-btn delete" onclick="deleteMasterData('スイミング')">削除</button></td>
+                </tr>
+                <tr>
+                  <td>体操</td>
+                  <td style="text-align: right;"><button class="action-btn delete" onclick="deleteMasterData('体操')">削除</button></td>
+                </tr>
+                <tr>
+                  <td>剣道</td>
+                  <td style="text-align: right;"><button class="action-btn delete" onclick="deleteMasterData('剣道')">削除</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Master: Club -->
+        <div id="master-tab-club" class="tab-content">
+          <div class="card">
+            <div class="toolbar">
+              <span style="font-size: 14px; color: #1A1A1A;">全 4 件</span>
+              <button class="btn-primary" style="width: auto; padding: 10px 20px;" onclick="openMasterModal('クラブ')">+ 新規登録</button>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>名称</th>
+                  <th style="width: 150px; text-align: center;">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>サッカー部</td>
+                  <td style="text-align: right;"><button class="action-btn delete" onclick="deleteMasterData('サッカー部')">削除</button></td>
+                </tr>
+                <tr>
+                  <td>野球部</td>
+                  <td style="text-align: right;"><button class="action-btn delete" onclick="deleteMasterData('野球部')">削除</button></td>
+                </tr>
+                <tr>
+                  <td>吹奏楽部</td>
+                  <td style="text-align: right;"><button class="action-btn delete" onclick="deleteMasterData('吹奏楽部')">削除</button></td>
+                </tr>
+                <tr>
+                  <td>美術部</td>
+                  <td style="text-align: right;"><button class="action-btn delete" onclick="deleteMasterData('美術部')">削除</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Master: Committee -->
+        <div id="master-tab-committee" class="tab-content">
+          <div class="card">
+            <div class="toolbar">
+              <span style="font-size: 14px; color: #1A1A1A;">全 4 件</span>
+              <button class="btn-primary" style="width: auto; padding: 10px 20px;" onclick="openMasterModal('委員会')">+ 新規登録</button>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>名称</th>
+                  <th style="width: 150px; text-align: center;">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>図書委員</td>
+                  <td style="text-align: right;"><button class="action-btn delete" onclick="deleteMasterData('図書委員')">削除</button></td>
+                </tr>
+                <tr>
+                  <td>放送委員</td>
+                  <td style="text-align: right;"><button class="action-btn delete" onclick="deleteMasterData('放送委員')">削除</button></td>
+                </tr>
+                <tr>
+                  <td>保健委員</td>
+                  <td style="text-align: right;"><button class="action-btn delete" onclick="deleteMasterData('保健委員')">削除</button></td>
+                </tr>
+                <tr>
+                  <td>体育委員</td>
+                  <td style="text-align: right;"><button class="action-btn delete" onclick="deleteMasterData('体育委員')">削除</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Master: PTA -->
+        <div id="master-tab-pta" class="tab-content">
+          <div class="card">
+            <div class="toolbar">
+              <span style="font-size: 14px; color: #1A1A1A;">全 5 件</span>
+              <button class="btn-primary" style="width: auto; padding: 10px 20px;" onclick="openMasterModal('保護者会役員')">+ 新規登録</button>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>名称</th>
+                  <th style="width: 150px; text-align: center;">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>会長</td>
+                  <td style="text-align: right;"><button class="action-btn delete" onclick="deleteMasterData('会長')">削除</button></td>
+                </tr>
+                <tr>
+                  <td>副会長</td>
+                  <td style="text-align: right;"><button class="action-btn delete" onclick="deleteMasterData('副会長')">削除</button></td>
+                </tr>
+                <tr>
+                  <td>書記</td>
+                  <td style="text-align: right;"><button class="action-btn delete" onclick="deleteMasterData('書記')">削除</button></td>
+                </tr>
+                <tr>
+                  <td>会計</td>
+                  <td style="text-align: right;"><button class="action-btn delete" onclick="deleteMasterData('会計')">削除</button></td>
+                </tr>
+                <tr>
+                  <td>委員</td>
+                  <td style="text-align: right;"><button class="action-btn delete" onclick="deleteMasterData('委員')">削除</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Master: Mixed Grade Groups -->
+        <div id="master-tab-mixed-group" class="tab-content">
+          <div class="card" style="max-width: 500px;">
+            <h3 style="margin-top: 0; margin-bottom: 16px; font-size: 16px; color: #1A1A1A;">縦割り班の数</h3>
+            <div class="form-group">
+              <label class="form-label">班数</label>
+              <div style="display: flex; gap: 12px; align-items: center;">
+                <input id="inputMixedGroupCount" type="number" class="form-input" style="margin-bottom: 0; width: 100px; text-align: right;" value="12" min="1">
+                <span style="font-size: 14px;">班</span>
+                <button class="btn-primary" style="width: auto; padding: 8px 16px; margin-left: auto;" onclick="saveMixedGroupCount()">保存する</button>
+              </div>
+            </div>
+            <p style="font-size: 12px; color: #6B7280; margin-top: 16px;">
+              ※設定した班数は、児童の「縦割り班」割り当て機能などに使用されます。
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Page -->
+      <div id="page-settings" class="page">
+        <div class="page-header">
+          <h1 class="page-title">システム設定</h1>
+          <p class="page-subtitle">システム全体の環境設定・管理</p>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">閲覧用パスワード設定</h3>
+          <p style="font-size: 14px; color: #1A1A1A; margin-bottom: 20px;">
+            入試情報など、セキュリティ保護された画面へアクセスするためのパスワードです。
+          </p>
+          <div class="form-group">
+            <label class="form-label">現在のパスワード</label>
+            <input type="password" class="form-input" style="max-width: 300px;">
+          </div>
+          <div class="form-group">
+            <label class="form-label">新しいパスワード</label>
+            <input type="password" class="form-input" style="max-width: 300px;">
+          </div>
+          <div class="form-group">
+            <label class="form-label">新しいパスワード（確認）</label>
+            <input type="password" class="form-input" style="max-width: 300px;">
+          </div>
+          <div style="display: flex; justify-content: flex-end;">
+            <button class="btn-primary" style="width: auto;">保存</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">年度設定（進級・卒業処理）</h3>
+          <p style="font-size: 14px; color: #1A1A1A; margin-bottom: 20px;">
+            新年度への切り替え作業を行います。全在校生の学年を1つ上げ、自動的にクラス編成のベースを作成します。
+          </p>
+          <div
+            style="background-color: #FEF2F2; border: 1px solid #FCA5A5; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
+            <div
+              style="color: #DC2626; font-weight: bold; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+              <span>⚠️</span>
+              この操作は取り消せません
+            </div>
+            <p style="font-size: 13px; color: #991B1B; margin: 0; line-height: 1.5;">
+              「年度を翌年度に進める」を実行すると、現在の6年生は自動的に卒業生へ移行し、その他の学年は1つ上がります。<br>
+              必ず全児童の今年度の成績や情報が入力完了しているかご確認ください。
+            </p>
+          </div>
+
+          <button class="btn-primary" style="background-color: #DC2626; border-color: #DC2626; width: auto;"
+            onclick="openModal('advanceYearModal')">年度を翌年度に進める</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Student Modal -->
+  <div id="studentModal" class="modal" onclick="closeModal('studentModal')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <h2 class="modal-title">新規児童登録</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">学籍番号</label>
+          <input id="inputStudentId" class="form-input" style="margin-bottom: 0;" placeholder="2024001">
+        </div>
+        <div class="form-group">
+          <label class="form-label">氏名</label>
+          <input id="inputStudentName" class="form-input" style="margin-bottom: 0;" placeholder="山田 太郎">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">学年</label>
+          <select id="inputStudentGrade" class="search-select" style="width: 100%;">
+            <option value="">選択してください</option>
+            <option>1年</option>
+            <option>2年</option>
+            <option>3年</option>
+            <option>4年</option>
+            <option>5年</option>
+            <option>6年</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">クラス</label>
+          <select id="inputStudentClass" class="search-select" style="width: 100%;">
+            <option value="">選択してください</option>
+            <option>A組</option>
+            <option>B組</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">保護者名</label>
+        <input id="inputStudentParent" class="form-input" style="margin-bottom: 0;" placeholder="山田 一郎">
+      </div>
+      <div class="form-group">
+        <label class="form-label">連絡先電話番号</label>
+        <input id="inputStudentPhone" class="form-input" style="margin-bottom: 0;" placeholder="090-1234-5678">
+      </div>
+      <div class="form-group">
+        <label class="form-label">住所</label>
+        <input id="inputStudentAddress" class="form-input" style="margin-bottom: 0;" placeholder="東京都〇〇区...">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModal('studentModal')">キャンセル</button>
+        <button class="btn-primary" style="width: auto;" onclick="registerStudent()">登録する</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Teacher Modal -->
+  <div id="teacherModal" class="modal" onclick="closeModal('teacherModal')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <h2 class="modal-title">新規教員招待</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">氏名（姓）</label>
+          <input class="form-input" style="margin-bottom: 0;" placeholder="山田">
+        </div>
+        <div class="form-group">
+          <label class="form-label">氏名（名）</label>
+          <input class="form-input" style="margin-bottom: 0;" placeholder="太郎">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">メールアドレス</label>
+        <input class="form-input" style="margin-bottom: 0;" placeholder="example@school.ed.jp">
+      </div>
+      <div class="form-group">
+        <label class="form-label">権限</label>
+        <select class="search-select" style="width: 100%;">
+          <option>一般教員</option>
+          <option>管理者</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModal('teacherModal')">キャンセル</button>
+        <button class="btn-primary" style="width: auto;">招待メールを送信</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Advance Year Modal -->
+  <div id="advanceYearModal" class="modal" onclick="closeModal('advanceYearModal')">
+    <div class="modal-content" style="max-width: 500px;" onclick="event.stopPropagation()">
+      <h2 class="modal-title" style="color: #DC2626; border-bottom: none; padding-bottom: 0;">【警告】年度更新の最終確認</h2>
+      <div
+        style="margin: 20px 0; padding: 16px; background-color: #f9fafb; border-radius: 8px; border-left: 4px solid #DC2626;">
+        <p style="font-size: 14px; color: #1A1A1A; margin-bottom: 8px; font-weight: bold;">
+          以下の処理が実行されます：
+        </p>
+        <ul style="font-size: 13px; color: #4B5563; padding-left: 20px; line-height: 1.6; margin: 0;">
+          <li>システム年度を「2025年度」へ更新します</li>
+          <li>現在の6年生を自動的に「卒業生」へ移行します</li>
+          <li>1〜5年生の学年を1つ引き上げます</li>
+        </ul>
+      </div>
+      <p style="font-size: 14px; color: #1A1A1A; margin-bottom: 24px;">
+        この操作は元に戻すことができません。<br>
+        本当に年度を翌年度に進めてもよろしいですか？
+      </p>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModal('advanceYearModal')">キャンセル</button>
+        <button class="btn-primary" style="background-color: #DC2626; border-color: #DC2626; width: auto;"
+          onclick="confirmAdvanceYear()">実行する</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sibling Management Modal -->
+  <div id="siblingModal" class="modal" onclick="closeModal('siblingModal')">
+    <div class="modal-content" style="max-width: 500px;" onclick="event.stopPropagation()">
+      <h2 class="modal-title">兄弟編集</h2>
+      <p style="font-size: 14px; color: #4b5563; margin-bottom: 12px;">
+        在校生を検索して兄弟として登録します。
+      </p>
+
+      <!-- 選択済み兄弟チップ -->
+      <div id="siblingChips" style="display: flex; flex-wrap: wrap; gap: 8px; min-height: 44px; margin-bottom: 16px; padding: 8px 10px; border: 1px solid #e5e5e5; border-radius: 4px; background: #fafafa; align-items: center;">
+        <span style="font-size: 13px; color: #9CA3AF;">兄弟が未登録です</span>
+      </div>
+
+      <!-- サーチボックス -->
+      <div style="position: relative; margin-bottom: 24px;">
+        <input id="siblingSearchInput" class="form-input" style="margin-bottom: 0;"
+               placeholder="氏名またはカナで検索..."
+               oninput="filterSiblingSearch(this.value)"
+               onfocus="filterSiblingSearch(this.value)"
+               onblur="hideSiblingSearch()"
+               autocomplete="off">
+        <div id="siblingSearchResults" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: #fff; border: 1px solid #d0d0d0; border-top: none; border-radius: 0 0 4px 4px; max-height: 200px; overflow-y: auto; z-index: 100; box-shadow: 0 4px 6px rgba(0,0,0,0.08);">
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModal('siblingModal')">キャンセル</button>
+        <button class="btn-primary" style="width: auto;" onclick="saveSiblings()">保存する</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Graduate Detail Modal -->
+  <div id="graduateDetailModal" class="modal" onclick="closeModal('graduateDetailModal')">
+    <div class="modal-content" style="max-width: 600px;" onclick="event.stopPropagation()">
+      <h2 class="modal-title">卒業生 詳細・編集</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">学籍番号</label>
+          <input id="gd-id" class="form-input" style="margin-bottom:0;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">卒業年度</label>
+          <input id="gd-gradYear" class="form-input" style="margin-bottom:0;">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">氏名(漢字)</label>
+          <input id="gd-name" class="form-input" style="margin-bottom:0;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">氏名(カナ)</label>
+          <input id="gd-nameKana" class="form-input" style="margin-bottom:0;">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">性別</label>
+          <input id="gd-gender" class="form-input" style="margin-bottom:0;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">生年月日</label>
+          <input id="gd-birthday" class="form-input" style="margin-bottom:0;">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">郵便番号</label>
+          <input id="gd-zip" class="form-input" style="margin-bottom:0;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">住所</label>
+          <input id="gd-address" class="form-input" style="margin-bottom:0;">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">メールアドレス</label>
+        <input id="gd-email" class="form-input" style="margin-bottom:0;">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">電話番号1</label>
+          <input id="gd-phone1" class="form-input" style="margin-bottom:0;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">電話番号2</label>
+          <input id="gd-phone2" class="form-input" style="margin-bottom:0;">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">卒業後の進路</label>
+        <input id="gd-career" class="form-input" style="margin-bottom:0;">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModal('graduateDetailModal')">キャンセル</button>
+        <button class="btn-primary" style="width:auto;" onclick="closeModal('graduateDetailModal')">保存する</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Open Campus Detail Modal -->
+  <div id="openCampusDetailModal" class="modal" onclick="closeModal('openCampusDetailModal')">
+    <div class="modal-content" style="max-width: 620px;" onclick="event.stopPropagation()">
+      <h2 class="modal-title">イベント参加者 詳細・編集</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">氏名(漢字)</label>
+          <input id="oc-name" class="form-input" style="margin-bottom:0;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">氏名(カナ)</label>
+          <input id="oc-nameKana" class="form-input" style="margin-bottom:0;">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">学年</label>
+          <input id="oc-grade" class="form-input" style="margin-bottom:0;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">性別</label>
+          <input id="oc-gender" class="form-input" style="margin-bottom:0;">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">塾名称その他</label>
+          <input id="oc-school" class="form-input" style="margin-bottom:0;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">生年月日</label>
+          <input id="oc-birthday" class="form-input" style="margin-bottom:0;">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">受験生SEQ</label>
+          <input id="oc-seq" class="form-input" style="margin-bottom:0;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">イベント申込番号</label>
+          <input id="oc-eventNo" class="form-input" style="margin-bottom:0;">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">ログインメールアドレス</label>
+          <input id="oc-loginEmail" class="form-input" style="margin-bottom:0;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">申込時メールアドレス</label>
+          <input id="oc-applyEmail" class="form-input" style="margin-bottom:0;">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">郵便番号</label>
+          <input id="oc-zip" class="form-input" style="margin-bottom:0;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">都道府県</label>
+          <input id="oc-pref" class="form-input" style="margin-bottom:0;">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">市区町村</label>
+          <input id="oc-city" class="form-input" style="margin-bottom:0;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">町名・番地</label>
+          <input id="oc-street" class="form-input" style="margin-bottom:0;">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">建物名・部屋番号</label>
+          <input id="oc-building" class="form-input" style="margin-bottom:0;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">電話番号</label>
+          <input id="oc-phone" class="form-input" style="margin-bottom:0;">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">イベント参加</label>
+          <input id="oc-status" class="form-input" style="margin-bottom:0;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">専願・併願</label>
+          <input id="oc-wish" class="form-input" style="margin-bottom:0;">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModal('openCampusDetailModal')">キャンセル</button>
+        <button class="btn-primary" style="width:auto;" onclick="closeModal('openCampusDetailModal')">保存する</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Examinee Detail Modal -->
+  <div id="examineeDetailModal" class="modal" onclick="closeModal('examineeDetailModal')">
+    <div class="modal-content" style="max-width: 620px;" onclick="event.stopPropagation()">
+      <h2 class="modal-title">入試受験者 詳細・編集</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">氏名(漢字)</label>
+          <input id="ex-name" class="form-input" style="margin-bottom:0;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">氏名(カナ)</label>
+          <input id="ex-nameKana" class="form-input" style="margin-bottom:0;">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">受験番号</label>
+          <input id="ex-examNo" class="form-input" style="margin-bottom:0;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">性別</label>
+          <input id="ex-gender" class="form-input" style="margin-bottom:0;">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">幼稚園</label>
+          <input id="ex-kindergarten" class="form-input" style="margin-bottom:0;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">塾</label>
+          <input id="ex-juku" class="form-input" style="margin-bottom:0;">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">生年月日</label>
+          <input id="ex-birthday" class="form-input" style="margin-bottom:0;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">判定</label>
+          <input id="ex-result" class="form-input" style="margin-bottom:0;">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">郵便番号</label>
+          <input id="ex-zip" class="form-input" style="margin-bottom:0;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">住所</label>
+          <input id="ex-address" class="form-input" style="margin-bottom:0;">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">保護者名</label>
+          <input id="ex-guardian" class="form-input" style="margin-bottom:0;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">兄姉</label>
+          <input id="ex-sibling" class="form-input" style="margin-bottom:0;">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">縁故</label>
+          <input id="ex-connection" class="form-input" style="margin-bottom:0;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">専願/併願/推薦</label>
+          <input id="ex-wish" class="form-input" style="margin-bottom:0;">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">推薦状</label>
+          <input id="ex-recommendation" class="form-input" style="margin-bottom:0;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">preテスト（点数）</label>
+          <input id="ex-preTest" class="form-input" style="margin-bottom:0;">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">個別相談</label>
+          <input id="ex-consultation" class="form-input" style="margin-bottom:0;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">備考</label>
+          <input id="ex-note" class="form-input" style="margin-bottom:0;">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModal('examineeDetailModal')">キャンセル</button>
+        <button class="btn-primary" style="width:auto;" onclick="closeModal('examineeDetailModal')">保存する</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Export Format Modal -->
+  <div id="exportFormatModal" class="modal" onclick="closeModal('exportFormatModal')">
+    <div class="modal-content" style="max-width: 400px;" onclick="event.stopPropagation()">
+      <h2 class="modal-title">出力形式を選択</h2>
+      <div id="exportPasswordSection" class="hidden">
+        <div style="background-color: #FEF3C7; border: 1px solid #F59E0B; border-radius: 6px; padding: 12px 16px; margin-bottom: 20px;">
+          <p style="font-size: 13px; color: #92400E; margin: 0;">入試受験者情報の出力には閲覧用パスワードが必要です。</p>
+        </div>
+        <div class="form-group">
+          <label class="form-label">閲覧用パスワード</label>
+          <input type="password" id="exportPassword" class="form-input" style="margin-bottom: 0;" placeholder="パスワードを入力">
+        </div>
+      </div>
+      <div style="display: flex; gap: 12px; justify-content: center; margin-top: 8px;">
+        <button class="btn-export btn-export-csv" onclick="doExport('CSV')">CSVで出力</button>
+        <button class="btn-export btn-export-pdf" onclick="doExport('PDF')">PDFで出力</button>
+      </div>
+      <div style="display: flex; justify-content: flex-start; margin-top: 20px; padding-top: 16px; border-top: 1px solid #e5e5e5;">
+        <button class="btn-secondary" onclick="closeModal('exportFormatModal')">キャンセル</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Master Data Modal -->
+  <div id="masterDataModal" class="modal" onclick="closeModal('masterDataModal')">
+    <div class="modal-content" style="max-width: 400px;" onclick="event.stopPropagation()">
+      <h2 class="modal-title" id="masterModalTitle">新規登録</h2>
+      <div class="form-group">
+        <label class="form-label">名称</label>
+        <input id="inputMasterName" class="form-input" style="margin-bottom: 0;" placeholder="名称を入力">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModal('masterDataModal')">キャンセル</button>
+        <button class="btn-primary" style="width: auto;" onclick="registerMasterData()">登録する</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+    // Login functions
+    function login() {
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('appContainer').style.display = 'block';
+    }
+
+    function logout() {
+      document.getElementById('appContainer').style.display = 'none';
+      document.getElementById('loginScreen').classList.remove('hidden');
+    }
+
+    function showLogin() {
+      document.getElementById('loginScreen').classList.remove('hidden');
+      document.getElementById('forgotPasswordScreen').classList.add('hidden');
+      document.getElementById('forgotEmailScreen').classList.add('hidden');
+    }
+
+    function showForgotPassword() {
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('forgotPasswordScreen').classList.remove('hidden');
+    }
+
+    function showForgotEmail() {
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('forgotEmailScreen').classList.remove('hidden');
+    }
+
+    // Page navigation
+    function showPage(pageId) {
+      // Hide all pages
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+      });
+
+      // Show selected page
+      document.getElementById('page-' + pageId).classList.add('active');
+
+      // Update nav items
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+      });
+
+      // Find and activate the correct nav item
+      const navItem = document.querySelector(`.nav-item[data-page="${pageId}"]`);
+      if (navItem) {
+        navItem.classList.add('active');
+      }
+
+      // Handle examinees special case
+      if (pageId === 'examinees' || pageId === 'examineesAuth') {
+        document.querySelector('.nav-item[data-page="examinees"]').classList.add('active');
+      }
+
+      // Reset export tabs when navigating to export page
+      if (pageId === 'export') {
+        showExportTab('fixed');
+      }
+
+      // Reset mail steps when navigating to mail page
+      if (pageId === 'mail') {
+        showMailStep(1);
+      }
+    }
+
+    // Advance Year action
+    function confirmAdvanceYear() {
+      closeModal('advanceYearModal');
+      setTimeout(() => {
+        alert('年度更新が完了しました。\n（※モックアップのため、実際のデータ移動はシミュレートされません）');
+      }, 300);
+    }
+
+    // Export tab functions
+    function showExportTab(tab) {
+      // Update tabs
+      document.querySelectorAll('#page-export .tab').forEach(t => {
+        t.classList.remove('active');
+      });
+      document.querySelector(`#page-export .tab[data-tab="${tab}"]`).classList.add('active');
+
+      // Hide all export sections
+      document.getElementById('export-fixed-1').classList.add('hidden');
+      document.getElementById('export-fixed-2').classList.add('hidden');
+      document.getElementById('export-custom-1').classList.add('hidden');
+      document.getElementById('export-custom-2').classList.add('hidden');
+      document.getElementById('export-history').classList.add('hidden');
+
+      // Show selected section
+      if (tab === 'fixed') {
+        document.getElementById('export-fixed-1').classList.remove('hidden');
+      } else if (tab === 'custom') {
+        document.getElementById('export-custom-1').classList.remove('hidden');
+      } else if (tab === 'history') {
+        document.getElementById('export-history').classList.remove('hidden');
+      }
+    }
+
+    function showExportStep(type, step) {
+      if (type === 'fixed') {
+        document.getElementById('export-fixed-1').classList.add('hidden');
+        document.getElementById('export-fixed-2').classList.add('hidden');
+        document.getElementById(`export-fixed-${step}`).classList.remove('hidden');
+      } else if (type === 'custom') {
+        document.getElementById('export-custom-1').classList.add('hidden');
+        document.getElementById('export-custom-2').classList.add('hidden');
+        document.getElementById(`export-custom-${step}`).classList.remove('hidden');
+      }
+    }
+
+    function updateCustomExportFields() {
+      const type = document.getElementById('customExportTypeSelect').value;
+      const grids = ['students', 'graduates', 'opencampus', 'examinees'];
+
+      grids.forEach(g => {
+        const el = document.getElementById(`checkbox-grid-${g}`);
+        if (el) el.classList.add('hidden');
+      });
+
+      const targetEl = document.getElementById(`checkbox-grid-${type}`);
+      if (targetEl) targetEl.classList.remove('hidden');
+    }
+
+    // Mail step functions
+    function showMailStep(step) {
+      // Update steps indicator
+      document.querySelectorAll('#page-mail .step').forEach((t, index) => {
+        t.classList.remove('active');
+        if (index + 1 === step) {
+          t.classList.add('active');
+        }
+      });
+
+      // Hide all steps
+      document.getElementById('mail-step-1').classList.add('hidden');
+      document.getElementById('mail-step-2').classList.add('hidden');
+      document.getElementById('mail-step-3').classList.add('hidden');
+
+      // Show selected step
+      document.getElementById(`mail-step-${step}`).classList.remove('hidden');
+    }
+
+    // Modal functions
+    function openModal(modalId) {
+      document.getElementById(modalId).classList.add('show');
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.remove('show');
+    }
+
+    // --- Master Data Logic ---
+    let currentMasterCategory = '';
+
+    function showMasterTab(tabId) {
+      // Update tabs
+      document.querySelectorAll('#page-master .tab').forEach(t => {
+        t.classList.remove('active');
+      });
+      document.querySelector(`#page-master .tab[data-master-tab="${tabId}"]`).classList.add('active');
+
+      // Hide all tab content
+      document.querySelectorAll('#page-master .tab-content').forEach(c => {
+        c.classList.remove('active');
+      });
+
+      // Show selected tab content
+      document.getElementById(`master-tab-${tabId}`).classList.add('active');
+    }
+
+    function openMasterModal(categoryName) {
+      currentMasterCategory = categoryName;
+      document.getElementById('masterModalTitle').textContent = `新規登録 (${categoryName})`;
+      document.getElementById('inputMasterName').value = '';
+      openModal('masterDataModal');
+    }
+
+    function registerMasterData() {
+      const name = document.getElementById('inputMasterName').value;
+      if (!name) {
+        alert('名称を入力してください。');
+        return;
+      }
+      closeModal('masterDataModal');
+      setTimeout(() => {
+        alert(`${currentMasterCategory}に「${name}」を登録しました。\n（※モックアップのため、実際のリストには追加されません）`);
+      }, 300);
+    }
+
+    function deleteMasterData(itemName) {
+      if (confirm(`「${itemName}」を削除してもよろしいですか？\n※この操作は取り消せません。`)) {
+        alert(`「${itemName}」を削除しました。\n（※モックアップのため、実際のリストからは削除されません）`);
+      }
+    }
+
+    function saveMixedGroupCount() {
+      const count = document.getElementById('inputMixedGroupCount').value;
+      if (!count || count < 1) {
+        alert('正しい班数を入力してください。');
+        return;
+      }
+      setTimeout(() => {
+        alert(`縦割り班の数を「${count}班」に設定しました。`);
+      }, 300);
+    }
+
+    // --- Export Logic ---
+    function downloadCSVTemplate() {
+      setTimeout(() => {
+        alert('「一括登録用CSVテンプレート.csv」のダウンロードを開始します。');
+      }, 300);
+    }
+
+    function toggleCategoryCheckboxes(checkboxElem, categoryClass) {
+      const isChecked = checkboxElem.checked;
+      document.querySelectorAll(`.${categoryClass}`).forEach(childCheckbox => {
+        childCheckbox.checked = isChecked;
+      });
+    }
+
+    // --- Sibling Management Logic ---
+    let editingStudentId = null;
+    let selectedSiblings = [];
+
+    function openSiblingModal() {
+      selectedSiblings = [];
+      const existingItems = document.querySelectorAll('#sibling-list-display li');
+      existingItems.forEach(item => {
+        const text = item.textContent.trim();
+        if (text && text !== 'なし') selectedSiblings.push(text);
+      });
+      renderSiblingChips();
+      document.getElementById('siblingSearchInput').value = '';
+      document.getElementById('siblingSearchResults').style.display = 'none';
+      openModal('siblingModal');
+    }
+
+    function renderSiblingChips() {
+      const container = document.getElementById('siblingChips');
+      container.innerHTML = '';
+      if (selectedSiblings.length === 0) {
+        container.innerHTML = '<span style="font-size: 13px; color: #9CA3AF;">兄弟が未登録です</span>';
+        return;
+      }
+      selectedSiblings.forEach((name, idx) => {
+        const chip = document.createElement('div');
+        chip.style.cssText = 'display:flex;align-items:center;gap:4px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:100px;padding:4px 10px;font-size:13px;color:#1E3A8A;';
+        chip.innerHTML = `<span>${name}</span><button style="background:none;border:none;cursor:pointer;font-size:16px;color:#93C5FD;padding:0 0 0 4px;line-height:1;" onclick="removeSiblingChip(${idx})">×</button>`;
+        container.appendChild(chip);
+      });
+    }
+
+    function filterSiblingSearch(query) {
+      const resultsDiv = document.getElementById('siblingSearchResults');
+      if (!query.trim()) {
+        resultsDiv.style.display = 'none';
+        return;
+      }
+      const q = query.trim().toLowerCase();
+      const matches = studentsData.filter(s =>
+        s.name.toLowerCase().includes(q) || (s.kana && s.kana.toLowerCase().includes(q))
+      );
+      if (matches.length === 0) {
+        resultsDiv.innerHTML = '<div style="padding: 10px 16px; font-size: 13px; color: #9CA3AF;">該当する在校生が見つかりません</div>';
+      } else {
+        resultsDiv.innerHTML = matches.map(s =>
+          `<div style="padding: 10px 16px; font-size: 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;"
+               onmousedown="addSiblingFromSearch('${s.name.replace(/'/g, "\\'")}')"
+               onmouseover="this.style.background='#f5f5f5'"
+               onmouseout="this.style.background=''">
+            <span>${s.name}</span>
+            <span style="font-size: 12px; color: #9CA3AF;">${s.grade} ${s.class}</span>
+          </div>`
+        ).join('');
+      }
+      resultsDiv.style.display = 'block';
+    }
+
+    function addSiblingFromSearch(name) {
+      if (!selectedSiblings.includes(name)) {
+        selectedSiblings.push(name);
+        renderSiblingChips();
+      }
+      document.getElementById('siblingSearchInput').value = '';
+      document.getElementById('siblingSearchResults').style.display = 'none';
+    }
+
+    function removeSiblingChip(idx) {
+      selectedSiblings.splice(idx, 1);
+      renderSiblingChips();
+    }
+
+    function hideSiblingSearch() {
+      setTimeout(() => {
+        const r = document.getElementById('siblingSearchResults');
+        if (r) r.style.display = 'none';
+      }, 150);
+    }
+
+    function saveSiblings() {
+      const displayList = document.getElementById('sibling-list-display');
+      displayList.innerHTML = '';
+      if (selectedSiblings.length === 0) {
+        displayList.innerHTML = '<li style="color:#9CA3AF;">なし</li>';
+      } else {
+        selectedSiblings.forEach(name => {
+          const li = document.createElement('li');
+          li.textContent = name;
+          displayList.appendChild(li);
+        });
+      }
+      closeModal('siblingModal');
+    }
+
+    // --- Graduate Detail Modal ---
+    function openGraduateDetail(btn) {
+      const cells = btn.closest('tr').querySelectorAll('td');
+      document.getElementById('gd-id').value = cells[0].textContent.trim();
+      document.getElementById('gd-gradYear').value = cells[1].textContent.trim();
+      document.getElementById('gd-name').value = cells[2].textContent.trim();
+      document.getElementById('gd-nameKana').value = cells[3].textContent.trim();
+      document.getElementById('gd-gender').value = cells[4].textContent.trim();
+      document.getElementById('gd-birthday').value = cells[5].textContent.trim();
+      document.getElementById('gd-zip').value = cells[6].textContent.trim();
+      document.getElementById('gd-address').value = cells[7].textContent.trim();
+      document.getElementById('gd-email').value = cells[8].textContent.trim();
+      document.getElementById('gd-phone1').value = cells[9].textContent.trim();
+      document.getElementById('gd-phone2').value = cells[10].textContent.trim();
+      document.getElementById('gd-career').value = cells[11].textContent.trim();
+      openModal('graduateDetailModal');
+    }
+
+    // --- Open Campus Detail Modal ---
+    function openOpenCampusDetail(btn) {
+      const cells = btn.closest('tr').querySelectorAll('td');
+      document.getElementById('oc-name').value = cells[0].textContent.trim();
+      document.getElementById('oc-grade').value = cells[1].textContent.trim();
+      document.getElementById('oc-school').value = cells[2].textContent.trim();
+      document.getElementById('oc-seq').value = cells[3].textContent.trim();
+      document.getElementById('oc-eventNo').value = cells[4].textContent.trim();
+      document.getElementById('oc-loginEmail').value = cells[5].textContent.trim();
+      document.getElementById('oc-applyEmail').value = cells[6].textContent.trim();
+      document.getElementById('oc-nameKana').value = cells[7].textContent.trim();
+      document.getElementById('oc-gender').value = cells[8].textContent.trim();
+      document.getElementById('oc-birthday').value = cells[9].textContent.trim();
+      document.getElementById('oc-zip').value = cells[10].textContent.trim();
+      document.getElementById('oc-pref').value = cells[11].textContent.trim();
+      document.getElementById('oc-city').value = cells[12].textContent.trim();
+      document.getElementById('oc-street').value = cells[13].textContent.trim();
+      document.getElementById('oc-building').value = cells[14].textContent.trim();
+      document.getElementById('oc-phone').value = cells[15].textContent.trim();
+      document.getElementById('oc-status').value = cells[16].textContent.trim();
+      document.getElementById('oc-wish').value = cells[17].textContent.trim();
+      openModal('openCampusDetailModal');
+    }
+
+    // --- Examinee Detail Modal ---
+    function openExamineeDetail(btn) {
+      const cells = btn.closest('tr').querySelectorAll('td');
+      document.getElementById('ex-name').value = cells[0].textContent.trim();
+      document.getElementById('ex-kindergarten').value = cells[1].textContent.trim();
+      document.getElementById('ex-juku').value = cells[2].textContent.trim();
+      document.getElementById('ex-examNo').value = cells[3].textContent.trim();
+      document.getElementById('ex-nameKana').value = cells[4].textContent.trim();
+      document.getElementById('ex-gender').value = cells[5].textContent.trim();
+      document.getElementById('ex-birthday').value = cells[6].textContent.trim();
+      document.getElementById('ex-result').value = cells[7].textContent.trim();
+      document.getElementById('ex-zip').value = cells[8].textContent.trim();
+      document.getElementById('ex-address').value = cells[9].textContent.trim();
+      document.getElementById('ex-guardian').value = cells[10].textContent.trim();
+      document.getElementById('ex-sibling').value = cells[11].textContent.trim();
+      document.getElementById('ex-connection').value = cells[12].textContent.trim();
+      document.getElementById('ex-wish').value = cells[13].textContent.trim();
+      document.getElementById('ex-recommendation').value = cells[14].textContent.trim();
+      document.getElementById('ex-preTest').value = cells[15].textContent.trim();
+      document.getElementById('ex-consultation').value = cells[16].textContent.trim();
+      document.getElementById('ex-note').value = cells[17].textContent.trim();
+      openModal('examineeDetailModal');
+    }
+
+    // --- Student Detail Logic ---
+    function openStudentDetail(id) {
+      showPage('studentDetail');
+      showStudentTab('student-tab-general');
+    }
+    
+    function showStudentTab(tabId) {
+      // Update tabs
+      document.querySelectorAll('#page-studentDetail .tab').forEach(t => {
+        t.classList.remove('active');
+      });
+      document.querySelector(`#page-studentDetail .tab[data-tab="${tabId}"]`).classList.add('active');
+
+      // Hide all tab content
+      document.querySelectorAll('#page-studentDetail .tab-content').forEach(c => {
+        c.classList.remove('active');
+      });
+
+      // Show selected tab content
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    const GENERAL_COLS = [
+      { key: 'id', label: '学籍番号' },
+      { key: 'classNum', label: 'クラス番号' },
+      { key: 'name', label: '氏名(漢字)' },
+      { key: 'kana', label: '氏名(カナ)' },
+      { key: 'groupNum', label: '縦割り班番号' },
+      { key: 'birthday', label: '誕生日（西暦）' },
+      { key: 'sport', label: 'スポーツ教室登録' },
+      { key: 'zip', label: '郵便番号' },
+      { key: 'address', label: '住所' },
+      { key: 'phone1', label: '電話番号1' },
+      { key: 'phone2', label: '電話番号2' },
+      { key: 'club1', label: '前期クラブ' },
+      { key: 'club2', label: '後期クラブ' },
+      { key: 'committee1', label: '前期委員会' },
+      { key: 'committee2', label: '後期委員会' },
+      { key: 'tabletId', label: 'タブレット番号' },
+      { key: 'email', label: 'メールアドレス' },
+      { key: 'emailPassword', label: 'メールパスワード' },
+      { key: 'libId', label: '図書館ID' },
+      { key: 'pta', label: '保護者会役員' },
+      { key: 'eiken', label: '英語検定級' },
+      { key: 'kanken', label: '漢字検定級' },
+      { key: 'sibling', label: '兄弟学年数字' },
+      { key: 'status', label: '在校生ステータス', isBadge: true }
+    ];
+
+    const HEALTH_COLS = [
+      { key: 'id', label: '学籍番号' },
+      { key: 'grade', label: '学年' },
+      { key: 'name', label: '氏名' },
+      { key: 'class', label: 'クラス' },
+      { key: 'h4', label: '4月 身長' },
+      { key: 'w4', label: '4月 体重' },
+      { key: 'h9', label: '9月 身長' },
+      { key: 'w9', label: '9月 体重' },
+      { key: 'h1', label: '1月 身長' },
+      { key: 'w1', label: '1月 体重' },
+      { key: 'vRight', label: '右眼 視力' },
+      { key: 'vLeft', label: '左眼 視力' },
+      { key: 'hRight', label: '右耳 聴力' },
+      { key: 'hLeft', label: '左耳 聴力' },
+      { key: 'medUrine', label: '尿検査' },
+      { key: 'den5Decay', label: '5月 う歯数' },
+      { key: 'den10Decay', label: '10月 う歯数' }
+    ];
+
+    let currentListTab = 'general';
+
+    function showStudentListTab(tabId) {
+      currentListTab = tabId;
+
+      // Update tabs UI
+      document.querySelectorAll('#page-students .tab').forEach(t => {
+        t.classList.remove('active');
+      });
+      document.querySelector(`#page-students .tab[data-list-tab="${tabId}"]`).classList.add('active');
+
+      // Toggle filters
+      document.getElementById('filter-general').style.display = tabId === 'general' ? 'flex' : 'none';
+      document.getElementById('filter-health').style.display = tabId === 'health' ? 'flex' : 'none';
+
+      // Toggle edit mode button
+      const editBtn = document.getElementById('healthEditModeToggle');
+      if (editBtn) {
+        if (tabId === 'health') {
+          editBtn.style.display = 'inline-block';
+        } else {
+          editBtn.style.display = 'none';
+          isHealthEditMode = false;
+          editBtn.innerText = '編集モードにする';
+          editBtn.style.backgroundColor = 'transparent';
+        }
+      }
+
+      renderStudentTable();
+    }
+
+    let isHealthEditMode = false;
+
+    function toggleHealthEditMode() {
+      isHealthEditMode = !isHealthEditMode;
+      const btn = document.getElementById('healthEditModeToggle');
+      if (btn) {
+        if (isHealthEditMode) {
+          btn.innerText = '編集終了';
+          btn.style.backgroundColor = '#EFF6FF';
+        } else {
+          btn.innerText = '編集モードにする';
+          btn.style.backgroundColor = 'transparent';
+        }
+      }
+      renderStudentTable();
+    }
+
+    function updateHealthData(studentId, key, value) {
+      const student = studentsData.find(s => s.id === studentId);
+      if (student) {
+        student[key] = value;
+        saveStudents();
+      }
+    }
+
+    // Initialize mock data
+    function initStudents() {
+      const stored = localStorage.getItem('schoolDX_students_v3');
+      if (stored) {
+        studentsData = JSON.parse(stored);
+      } else {
+        // Default seed data with varied health stats
+        const commonData = {
+          classNum: '12', groupNum: '3', tabletId: 'TB-0142',
+          birthday: '2012-05-15', sibling: '4年', gender: '男',
+          zip: '123-4567', address: '東京都〇〇区△△町', phone1: '03-1234-5678', phone2: '090-8765-4321',
+          pta: 'なし', email: 'example@school.ed.jp', emailPassword: 'password123', club1: 'サッカー部', club2: 'サッカー部',
+          committee1: '放送委員', committee2: '放送委員', sport: 'スイミング', libId: 'LIB-98765'
+        };
+
+        studentsData = [
+          {
+            ...commonData, id: '2024001', name: '田中 太郎', nameSei: '田中', nameMei: '太郎', kana: 'タナカ タロウ', kanaSei: 'タナカ', kanaMei: 'タロウ', grade: '6年', class: 'A組', parent: '田中 一郎', status: '在籍中', gender: '男',
+            h4: '145.2', w4: '38.5', h9: '147.1', w9: '39.8', h1: '149.5', w1: '41.2', vRight: 'A', vLeft: 'A', hRight: '所見なし', hLeft: '所見なし', medUrine: '異常なし', den5Decay: '0', den10Decay: '0'
+          },
+
+          {
+            ...commonData, id: '2024002', name: '鈴木 花子', nameSei: '鈴木', nameMei: '花子', kana: 'スズキ ハナコ', kanaSei: 'スズキ', kanaMei: 'ハナコ', grade: '6年', class: 'A組', parent: '鈴木 次郎', status: '在籍中', gender: '女',
+            h4: '142.1', w4: '36.0', h9: '143.5', w9: '37.1', h1: '-', w1: '-', vRight: 'B', vLeft: 'A', hRight: '所見なし', hLeft: '所見なし', medUrine: '異常なし', den5Decay: '1', den10Decay: '1'
+          },
+
+          {
+            ...commonData, id: '2024003', name: '佐藤 健太', nameSei: '佐藤', nameMei: '健太', kana: 'サトウ ケンタ', kanaSei: 'サトウ', kanaMei: 'ケンタ', grade: '5年', class: 'B組', parent: '佐藤 三郎', status: '在籍中', gender: '男',
+            h4: '138.5', w4: '32.1', h9: '140.0', w9: '33.5', h1: '141.2', w1: '34.0', vRight: 'A', vLeft: 'C', hRight: '所見あり', hLeft: '所見なし', medUrine: '異常なし', den5Decay: '0', den10Decay: '0'
+          },
+
+          {
+            ...commonData, id: '2024004', name: '山田 美咲', nameSei: '山田', nameMei: '美咲', kana: 'ヤマダ ミサキ', kanaSei: 'ヤマダ', kanaMei: 'ミサキ', grade: '5年', class: 'A組', parent: '山田 四郎', status: '在籍中', gender: '女',
+            h4: '139.8', w4: '34.5', h9: '141.2', w9: '35.8', h1: '-', w1: '-', vRight: 'A', vLeft: 'A', hRight: '所見なし', hLeft: '所見なし', medUrine: '再検査', den5Decay: '2', den10Decay: '0'
+          },
+
+          {
+            ...commonData, id: '2024005', name: '高橋 翔', nameSei: '高橋', nameMei: '翔', kana: 'タカハシ ショウ', kanaSei: 'タカハシ', kanaMei: 'ショウ', grade: '4年', class: 'B組', parent: '高橋 五郎', status: '休学中', gender: '男',
+            h4: '132.4', w4: '29.8', h9: '-', w9: '-', h1: '-', w1: '-', vRight: 'D', vLeft: 'D', hRight: '所見なし', hLeft: '所見なし', medUrine: '異常なし', den5Decay: '0', den10Decay: '0'
+          }
+        ];
+        saveStudents();
+      }
+      renderStudentTable();
+    }
+
+    function saveStudents() {
+      localStorage.setItem('schoolDX_students_v3', JSON.stringify(studentsData));
+    }
+
+    function renderStudentTable() {
+      const thead = document.getElementById('studentTableHead');
+      const tbody = document.getElementById('studentTableBody');
+      const cols = currentListTab === 'general' ? GENERAL_COLS : HEALTH_COLS;
+
+      // Render Header
+      let theadHtml = '<tr>';
+      cols.forEach(col => {
+        let thClass = '';
+        if (col.key === 'id') thClass = 'col-fixed-1';
+        if (col.key === 'grade' || col.key === 'classNum') thClass = 'col-fixed-2';
+        if (col.key === 'name') thClass = 'col-fixed-3';
+        theadHtml += `<th class="${thClass}">${col.label}</th>`;
+      });
+      theadHtml += '<th class="col-actions">操作</th></tr>';
+      thead.innerHTML = theadHtml;
+
+      // Render Body
+      tbody.innerHTML = '';
+      studentsData.forEach(student => {
+        const tr = document.createElement('tr');
+        let rowHtml = '';
+
+        cols.forEach(col => {
+          let val = student[col.key] || '-';
+          if (col.key === 'name') {
+            val = (student.nameSei || '') + ' ' + (student.nameMei || '');
+            if (!val.trim()) val = student.name || '-'; // Fallback
+          } else if (col.key === 'kana') {
+            val = (student.kanaSei || '') + ' ' + (student.kanaMei || '');
+            if (!val.trim()) val = student.kana || '-'; // Fallback
+          }
+
+          let tdClass = '';
+          if (col.key === 'id') tdClass = 'cell-fixed-1';
+          if (col.key === 'grade' || col.key === 'classNum') tdClass = 'cell-fixed-2';
+          if (col.key === 'name') tdClass = 'cell-fixed-3';
+
+          if (col.isBadge) {
+            const badgeClass = student[col.key] === '在籍中' ? 'badge-active' : 'badge-inactive';
+            rowHtml += `<td class="${tdClass}"><span class="badge ${badgeClass}">${val}</span></td>`;
+          } else if (currentListTab === 'health' && isHealthEditMode && col.key !== 'id' && col.key !== 'name' && col.key !== 'grade' && col.key !== 'class') {
+            const inputVal = val === '-' ? '' : val;
+            let width = '60px';
+            if (col.key === 'medUrine' || col.key === 'hRight' || col.key === 'hLeft') width = '100px';
+            rowHtml += `<td class="${tdClass}"><input class="form-input" style="width: ${width}; padding: 4px 8px; margin: 0; font-size: 13px;" value="${inputVal}" onchange="updateHealthData('${student.id}', '${col.key}', this.value)"></td>`;
+          } else {
+            rowHtml += `<td class="${tdClass}">${val}</td>`;
+          }
+        });
+
+        // Add actions to right side
+        rowHtml += `
+          <td class="cell-actions">
+            <button class="action-btn" onclick="openStudentDetail('${student.id}')">編集</button>
+            <button class="action-btn delete" onclick="deleteStudent('${student.id}')" style="margin-right: 0;">削除</button>
+          </td>
+        `;
+
+        tr.innerHTML = rowHtml;
+        tbody.appendChild(tr);
+      });
+
+      // Update count
+      // Note: Assuming the count element exists in existing HTML, but for now we skip dynamic count update or need to add ID to toolbar
+    }
+
+    function registerStudent() {
+      const idInput = document.getElementById('inputStudentId');
+      const nameInput = document.getElementById('inputStudentName');
+      const gradeInput = document.getElementById('inputStudentGrade');
+      const classInput = document.getElementById('inputStudentClass');
+      const parentInput = document.getElementById('inputStudentParent');
+
+      const id = idInput.value;
+      const name = nameInput.value;
+      const grade = gradeInput.value;
+      const classVal = classInput.value;
+      const parent = parentInput.value;
+
+      // Validation
+      if (!id || !name || !grade || !classVal) {
+        alert('必須項目（学籍番号、氏名、学年、クラス）を入力してください。');
+        return;
+      }
+
+      // Check for duplicate ID
+      if (studentsData.some(s => s.id === id)) {
+        alert('この学籍番号は既に登録されています。');
+        return;
+      }
+
+      const newStudent = {
+        id: id,
+        name: name,
+        grade: grade,
+        class: classVal,
+        parent: parent || '-',
+        status: '在籍中'
+      };
+
+      studentsData.push(newStudent);
+      saveStudents();
+      renderStudentTable();
+
+      closeModal('studentModal');
+
+      // Clear inputs
+      idInput.value = '';
+      nameInput.value = '';
+      gradeInput.value = '';
+      classInput.value = '';
+      parentInput.value = '';
+      document.getElementById('inputStudentPhone').value = '';
+      document.getElementById('inputStudentAddress').value = '';
+
+      alert('登録しました。');
+    }
+
+    function deleteStudent(id) {
+      if (!confirm('本当に削除しますか？')) return;
+
+      studentsData = studentsData.filter(s => s.id !== id);
+      saveStudents();
+      renderStudentTable();
+    }
+
+    // --- Export Format Modal ---
+    let currentExportSource = 'fixed';
+
+    function openExportModal(source) {
+      currentExportSource = source;
+      const passwordSection = document.getElementById('exportPasswordSection');
+      const isExaminees = source === 'custom' && document.getElementById('customExportTypeSelect').value === 'examinees';
+      if (isExaminees) {
+        passwordSection.classList.remove('hidden');
+      } else {
+        passwordSection.classList.add('hidden');
+      }
+      const pwdInput = document.getElementById('exportPassword');
+      if (pwdInput) pwdInput.value = '';
+      openModal('exportFormatModal');
+    }
+
+    function doExport(format) {
+      const passwordSection = document.getElementById('exportPasswordSection');
+      if (!passwordSection.classList.contains('hidden')) {
+        const pwd = document.getElementById('exportPassword').value;
+        if (!pwd) {
+          alert('閲覧用パスワードを入力してください。');
+          return;
+        }
+      }
+      closeModal('exportFormatModal');
+      setTimeout(() => {
+        alert(`${format}形式で出力します。\n（※モックアップのため、実際にはダウンロードされません）`);
+      }, 300);
+    }
+
+    // Run Init
+    window.addEventListener('DOMContentLoaded', initStudents);
+  </script>
+</body>
+
+</html>
